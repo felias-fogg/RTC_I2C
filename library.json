@@ -1,0 +1,29 @@
+{
+    "version": "0.1.0",
+    "name": "univRTC",
+    "keywords": "RTC, time",
+    "description": "A universal API for a large number of RTCs. Note that not the complete functionality of each RTC is supported",
+    "authors": "Bernhard Nebel",
+    "license": "MIT",
+    "dependencies":
+    {
+	{
+	"name": "Time",
+	"version": "^1.6.1"
+	},
+	{
+	    "name": "Wire"
+	}
+    }
+    "repository":
+    {
+	"type": "git",
+	"url": "https://github.com/felias-fogg/univRTC"
+    },
+    "frameworks": "arduino",
+    "platforms":
+    [
+	"atmelavr"
+    ]
+}
+
