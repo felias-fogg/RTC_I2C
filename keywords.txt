@@ -1,0 +1,44 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RTC	KEYWORD1
+DS1307	KEYWORD1
+DS1337	KEYWORD1
+DS3231	KEYWORD1
+PCF8563	KEYWORD1
+PCF8523	KEYWORD1
+RC5C372	KEYWORD1
+SD2405	KEYWORD1
+RV-8523	KEYWORD1
+RV-8803	KEYWORD1
+RV-3032	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+init	KEYWORD2
+isValid	KEYWORD2
+setTime	KEYWORD2
+getTime	KEYWORD2
+getRegister	KEYWORD2
+setRegister	KEYWORD2
+enable32kHz	KEYWORD2
+disable32kHz	KEYWORD2
+enable1Hz	KEYWORD2
+disable1Hz	KEYWORD2
+setOffset	KEYWORD2
+setAlarm	KEYWORD2
+enableAlarm	KEYWORD2
+disableAlarm	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
