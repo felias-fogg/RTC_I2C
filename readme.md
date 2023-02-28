@@ -62,5 +62,5 @@ There are the following example sketches:
 
 `simple.ino`: Simple test sketch for setting and getting time. 
 
-`testall.ino`: Interactive sketch that can be used to test all functions of an RTC. Simply change include file and class name. If you want to monitor the outlines, you also need to define the constants `PIN1HZ`, `PIN32KHZ` and `PINALARM`.
+`testall.ino`: Interactive sketch that can be used to test all functions of an RTC. Simply change include file and class name. If you want to monitor the outputs (SQW, INT), you also need to define the constants `PIN1HZ`, `PIN32KHZ` and `PINALARM`.
 

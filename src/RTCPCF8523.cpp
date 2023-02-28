@@ -21,6 +21,17 @@ bool RTCPCF8523::isValid(void) {
     ((getRegister(PCF8523_CLOCKREG) & 0b10000000) == 0);   // OS flag cleared
 }
 
+void RTCPCF8523::enableAlarm(void) { 
+  byte ctr = getRegister(PCF8523_CONTROL);
+  setRegister(PCF8523_CONTROL, (ctr & 0b11111101) | 0b00000010);
+}
+
+void RTCPCF8523::disableAlarm(void) {
+  byte ctr = getRegister(PCF8523_CONTROL);
+  setRegister(PCF8523_CONTROL, (ctr & 0b11111101) | 0b00000000); 
+}
+
+
 void RTCPCF8523::enable32kHz(void) {
   byte clkout = getRegister(PCF8523_CLKOUT);
   setRegister(PCF8523_CLKOUT, (clkout & 0b11000111) | 0b00000000); 

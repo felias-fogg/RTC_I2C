@@ -117,31 +117,20 @@ void RTCDSAlarm::clearAlarm(void) {
 // Alarm functions for all the NXP RTCs with PCF prefix
 
 // Common registers
-#define PCFALARM_ALARM  0x0A // start of alarm register (minutes)
-#define PCFALARM_CONTROL 0x00 // Control register
+#define PCFALARM_STATUS 0x00 // Control register
 
 void RTCPCFAlarm::setAlarm(byte minute, byte hour) {
-  setRegister(PCFALARM_ALARM, bin2bcd(minute)); // set minute alarm
-  setRegister(PCFALARM_ALARM+1, bin2bcd(hour)); // set hour alarm
-  setRegister(PCFALARM_ALARM+2, 0x80); // set day alarm to always
-  setRegister(PCFALARM_ALARM+3, 0x80); // set weekday alarm to always
-}
-
-void RTCPCFAlarm::enableAlarm(void) {
-  byte ctr = getRegister(PCFALARM_CONTROL);
-  setRegister(PCFALARM_CONTROL, (ctr & 0b11111101) | 0b00000010);
-}
-
-void RTCPCFAlarm::disableAlarm(void) {
-  byte ctr = getRegister(PCFALARM_CONTROL);
-  setRegister(PCFALARM_CONTROL, (ctr & 0b11111101) | 0b00000000); 
+  setRegister(_clockreg+7, bin2bcd(minute)); // set minute alarm
+  setRegister(_clockreg+8, bin2bcd(hour)); // set hour alarm
+  setRegister(_clockreg+9, 0x80); // set day alarm to always
+  setRegister(_clockreg+10, 0x80); // set weekday alarm to always
 }
 
 bool RTCPCFAlarm::senseAlarm(void) {
-  return ((getRegister(PCFALARM_CONTROL+1) & 0b1000) != 0);
+  return ((getRegister(PCFALARM_STATUS) & 0b1000) != 0);
 }
 
 void RTCPCFAlarm::clearAlarm(void) {
-  byte ctr = getRegister(PCFALARM_CONTROL+1);
-  setRegister(PCFALARM_CONTROL+1, (ctr & 0b11110111) | 0b00000000); 
+  byte ctr = getRegister(PCFALARM_STATUS);
+  setRegister(PCFALARM_STATUS, (ctr & 0b11110111) | 0b00000000); 
 }

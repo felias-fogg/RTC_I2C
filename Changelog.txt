@@ -12,5 +12,9 @@ V0.2.0 (28.2.2023)
 - added support for DS1337, DS3231, PCF8523
 - added example testall, which can be used as a unit test for the different modules
 
+V0.2.1 (28.2.2023)
+- added support for PCF8563
+
+
 
 

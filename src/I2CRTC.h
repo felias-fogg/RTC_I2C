@@ -72,8 +72,6 @@ class RTCDSAlarm : public I2CRTC {
 class RTCPCFAlarm : public I2CRTC {
  public:
   void setAlarm(byte minute, byte hour);
-  void enableAlarm(void);
-  void disableAlarm(void);
   bool senseAlarm(void);
   void clearAlarm(void);
 };

@@ -21,6 +21,8 @@ class RTCPCF8523: public RTCPCFAlarm {
   RTCPCF8523(void);
   void init(void);
   bool isValid(void);
+  void enableAlarm(void);
+  void disableAlarm(void);
   void enable32kHz(void);
   void disable32kHz(void);
   void enable1Hz(void);

@@ -1,5 +1,5 @@
 {
-    "version": "0.2.0",
+    "version": "0.2.1",
     "name": "I2CRTC",
     "keywords": "I2C, RTC, time",
     "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported",
