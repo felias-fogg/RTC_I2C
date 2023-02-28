@@ -1,8 +1,8 @@
 {
-    "version": "0.1.1",
-    "name": "univRTC",
-    "keywords": "RTC, time",
-    "description": "A universal API for a large number of RTCs. Note that not the complete functionality of each RTC is supported",
+    "version": "0.2.0",
+    "name": "I2CRTC",
+    "keywords": "I2C, RTC, time",
+    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported",
     "authors": "Bernhard Nebel",
     "license": "MIT",
     "dependencies":
@@ -18,7 +18,7 @@
     "repository":
     {
 	"type": "git",
-	"url": "https://github.com/felias-fogg/univRTC"
+	"url": "https://github.com/felias-fogg/I2CRTC"
     },
     "frameworks": "arduino",
     "platforms":

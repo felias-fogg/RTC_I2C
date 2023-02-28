@@ -1,0 +1,16 @@
+V0.1.0 (25.2.2023)
+- first stub with an idea for the API
+
+V0.1.1 (26.2.2023)
+- renamed from univRTC to I2CRTC
+- framework works with DS1307 example
+
+V0.2.0 (28.2.2023)
+- added new methods: enableXXHz, disableXXHz, alarm methods, and a getCapabilities method
+- thrown out setAlarm with only minutes since not all RTCs support that, so only hour with minute is
+  supported 
+- added support for DS1337, DS3231, PCF8523
+- added example testall, which can be used as a unit test for the different modules
+
+
+

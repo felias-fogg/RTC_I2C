@@ -1,6 +1,6 @@
 #include "I2CRTC.h"
 
-// try to establish connecttion to RTC after RTC specific parameters have been set
+// try to establish connection to RTC after RTC specific parameters have been set
 bool I2CRTC::begin(TwoWire *wi) { 
   if (_i2caddr == 0 || wi == NULL) return false;
   if (_started) return true;
@@ -13,36 +13,39 @@ bool I2CRTC::begin(TwoWire *wi) {
   _started = true;
 }
 
-bool I2CRTC::setTime(time_t t) {
+// set time from Unix time
+void I2CRTC::setTime(time_t t) {
   tmElements_t tm;
-
   breakTime(t, tm);
-  return setTime(tm);
+  setTime(tm);
 }
 
-bool I2CRTC::setTime(tmElements_t tm) {
+// set time from a time record
+void I2CRTC::setTime(tmElements_t tm) {
   _wire->beginTransmission(_i2caddr);
   _wire->write(_clockreg);
   _wire->write(bin2bcd(tm.Second)); 
   _wire->write(bin2bcd(tm.Minute));
   _wire->write(bin2bcd(tm.Hour));
-  _wire->write(bin2bcd(tm.Wday-1+_wdaybase));
+  if (_wdayfirst)
+    _wire->write(bin2bcd(tm.Wday-1+_wdaybase));
   _wire->write(bin2bcd(tm.Day));
+  if (!_wdayfirst)
+    _wire->write(bin2bcd(tm.Wday-1+_wdaybase));
   _wire->write(bin2bcd(tm.Month));
   _wire->write(bin2bcd(tm.Year-30)); // readjust to 2000 instead of 1970!
-  if (_wire->endTransmission() == 0) return true;
-  return false;
+  _wire->endTransmission();
 }
 
+// get Unix time
 time_t I2CRTC::getTime(void) {
   tmElements_t tm;
-
   getTime(tm);
   return makeTime(tm);
 }
 
+// get time as time record
 void I2CRTC::getTime(tmElements_t &tm) {
-
   tm = tmElements_t{0,0,0,0,0,0,0};
   _wire->beginTransmission(_i2caddr);
   _wire->write(_clockreg);
@@ -51,24 +54,94 @@ void I2CRTC::getTime(tmElements_t &tm) {
   tm.Second = bcd2bin(_wire->read()) & 0x7F;
   tm.Minute = bcd2bin(_wire->read()) & 0x7F;
   tm.Hour = bcd2bin(_wire->read()) & 0x3F;
-  tm.Wday = (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1;
+  if (_wdayfirst) 
+    tm.Wday = (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1;
   tm.Day = bcd2bin(_wire->read()) & 0x3F;
+  if (!_wdayfirst) 
+    tm.Wday = (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1;
   tm.Month = bcd2bin(_wire->read()) & 0x1F;
   tm.Year =  bcd2bin(_wire->read()) + 30; // rebase to 1970!
 }
 
-bool I2CRTC::setRegister(byte reg, byte val) {
+// set one RTC register
+void I2CRTC::setRegister(byte reg, byte val) {
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
   _wire->write(val);
-  if (_wire->endTransmission() == 0) return true;
-  return false;
+  _wire->endTransmission();
 }
 
+// get one RTC register
 byte I2CRTC::getRegister(byte reg) {
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
   if (_wire->endTransmission() != 0) return 0xFF;
-  if (_wire->requestFrom(_i2caddr, 1) != 1) return 0xFF;
+  if (_wire->requestFrom(_i2caddr, (byte)1) != 1) return 0xFF;
   return _wire->read();
+}
+
+// Alarm functions for all the Analog Devices RTCs with DS prefix
+
+// Common registers
+#define DSALARM_ALARM1  0x07 // start of alarm 1 register (seconds)
+#define DSALARM_CONTROL 0x0E // Control register
+#define DSALARM_STATUS  0x0F // Status register
+
+void RTCDSAlarm::setAlarm(byte minute, byte hour) {
+  setRegister(DSALARM_ALARM1, 0x00); // clear seconds alarm
+  setRegister(DSALARM_ALARM1+1, bin2bcd(minute)); // set minute alarm
+  setRegister(DSALARM_ALARM1+2, bin2bcd(hour)); // set hour alarm
+  setRegister(DSALARM_ALARM1+3, 0x80); // set day alarm to always
+}
+
+void RTCDSAlarm::enableAlarm(void) {
+  byte ctr = getRegister(DSALARM_CONTROL);
+  setRegister(DSALARM_CONTROL, (ctr & 0b11111110) | 0b00000001);
+}
+
+void RTCDSAlarm::disableAlarm(void) {
+  byte ctr = getRegister(DSALARM_CONTROL);
+  setRegister(DSALARM_CONTROL, (ctr & 0b11111110) | 0b00000000); 
+}
+
+bool RTCDSAlarm::senseAlarm(void) {
+  return getRegister(DSALARM_STATUS) & 0x01;
+}
+
+void RTCDSAlarm::clearAlarm(void) {
+  byte ctr = getRegister(DSALARM_STATUS);
+  setRegister(DSALARM_STATUS, (ctr & 0b11111110) | 0b00000000); 
+}
+
+
+// Alarm functions for all the NXP RTCs with PCF prefix
+
+// Common registers
+#define PCFALARM_ALARM  0x0A // start of alarm register (minutes)
+#define PCFALARM_CONTROL 0x00 // Control register
+
+void RTCPCFAlarm::setAlarm(byte minute, byte hour) {
+  setRegister(PCFALARM_ALARM, bin2bcd(minute)); // set minute alarm
+  setRegister(PCFALARM_ALARM+1, bin2bcd(hour)); // set hour alarm
+  setRegister(PCFALARM_ALARM+2, 0x80); // set day alarm to always
+  setRegister(PCFALARM_ALARM+3, 0x80); // set weekday alarm to always
+}
+
+void RTCPCFAlarm::enableAlarm(void) {
+  byte ctr = getRegister(PCFALARM_CONTROL);
+  setRegister(PCFALARM_CONTROL, (ctr & 0b11111101) | 0b00000010);
+}
+
+void RTCPCFAlarm::disableAlarm(void) {
+  byte ctr = getRegister(PCFALARM_CONTROL);
+  setRegister(PCFALARM_CONTROL, (ctr & 0b11111101) | 0b00000000); 
+}
+
+bool RTCPCFAlarm::senseAlarm(void) {
+  return ((getRegister(PCFALARM_CONTROL+1) & 0b1000) != 0);
+}
+
+void RTCPCFAlarm::clearAlarm(void) {
+  byte ctr = getRegister(PCFALARM_CONTROL+1);
+  setRegister(PCFALARM_CONTROL+1, (ctr & 0b11110111) | 0b00000000); 
 }
