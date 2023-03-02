@@ -1,14 +1,14 @@
 // Simple test for I2CRTC
 // Just include one RTC class and try it out
 
-#include <RTCRS5C372.h>
+#include <RTCRV8523.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 2
 #define PINALARM 3
 
-RTCRS5C372 RTC;
+RTCRV8523 RTC;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -224,11 +224,11 @@ void initRTC(void)  {
     Serial.print(", Date=");
     Serial.println(__DATE__);
   } else if (parse) {
-    Serial.print("RTC Communication Error:\n\rInput=");
+    Serial.print("RTC Communication Error:\n\rInput=   ");
     Serial.println(makeTime(tm));
     Serial.print(F("Response="));
     Serial.println(makeTime(newtm));
-    Serial.print(F("Valid="));
+    Serial.print(F("Valid=   "));
     Serial.println(valid);
   } else {
     Serial.print("Could not parse info from the compiler, Time=\"");

@@ -44,9 +44,10 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | `senseAlarm`   | none                                            | Returns `true`if alarm has been raised. |
 | `clearAlarm`   | none                                            | Clear alarm flag.|
 | `setOffset`    | `int` value for 0.01 ppm correction steps and one optional `byte` mode parameter | Note that not all RTCs support trimming and they have different step sizes, ranging from 0.1 ppm to 4.3 ppm. The function will try to approximate the passed value as much as possible. Currently, only DS1307, DS1337, and PCF8563 do not have an offset register. |
+| `getTemp` | none | Returns temperature as an integer value. |
 | `getRegister`  | `byte` register address                       | Returns contents of RTC register.                            |
 | `setRegister`  | `byte` register address, `byte` value | Sets RTC register to value.                                                          |
-| `getCapabilities` | none | Returns a byte with capability bits: Bit 0 = can output 32kHz signal, bit 1 = can output 1 Hz signal, bit 2 = has alarm, bit 3 = has offset register  |
+| `getCapabilities` | none | Returns a byte with capability bits: Bit 0 = can output 32kHz signal, bit 1 = can output 1 Hz signal, bit 2 = has alarm, bit 3 = has offset register, 4 = has temperature sensor |
 
 ## Caveats
 

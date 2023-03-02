@@ -1,4 +1,8 @@
 /* This is the class for PCF8523 that can be used as part of the I2CRTC library */
+/* When 1Hz or 32kHz signals are enables, they can be sensed at CLKOUT and INT1.
+ * The alarm interrupt can be sensed at INT1. When alarm is active, then there is no
+ * 1Hz or 32kHz output on INT1.
+ */
 
 #ifndef _RTCPCF8523_H_
 #define _RTCPCF8523_H_

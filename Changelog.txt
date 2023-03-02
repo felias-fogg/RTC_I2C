@@ -21,6 +21,11 @@ V0.2.2 (2.3.2023)
   used for RS5C372, who wants to see the register address in
   the upper nibble
 
+V0.2.3 (2.3.2023)
+- checked with new PCF8563 module. This one works flawlessly! The Waveshare one is apparently broken. 
+- added RV-8523 (well, it is simply a synonym for PCF8523)
+- added getTemp method
+
 
 
 

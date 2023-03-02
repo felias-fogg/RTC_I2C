@@ -123,7 +123,7 @@ void RTCDSAlarm::clearAlarm(void) {
 // Alarm functions for all the NXP RTCs with PCF prefix
 
 // Common registers
-#define PCFALARM_STATUS 0x00 // Control register
+#define PCFALARM_STATUS 0x01 // Control register
 
 void RTCPCFAlarm::setAlarm(byte minute, byte hour) {
   setRegister(_clockreg+7, bin2bcd(minute)); // set minute alarm
