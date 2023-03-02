@@ -49,7 +49,7 @@ void I2CRTC::getTime(tmElements_t &tm) {
   tm = tmElements_t{0,0,0,0,0,0,0};
   _wire->beginTransmission(_i2caddr);
   _wire->write(_clockreg);
-  if (_wire->endTransmission() != 0) return;
+  if (_wire->endTransmission(false) != 0) return;
   if (_wire->requestFrom(_i2caddr, (byte)7) != 7) return;
   tm.Second = bcd2bin(_wire->read()) & 0x7F;
   tm.Minute = bcd2bin(_wire->read()) & 0x7F;
@@ -65,19 +65,25 @@ void I2CRTC::getTime(tmElements_t &tm) {
 
 // set one RTC register
 void I2CRTC::setRegister(byte reg, byte val) {
+  //Serial.print(F("setReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b")); Serial.println(val,BIN);
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
   _wire->write(val);
   _wire->endTransmission();
+  //Serial.println(F("Verify:")); Serial.println(getRegister(reg),BIN);
 }
 
 // get one RTC register
 byte I2CRTC::getRegister(byte reg) {
+  byte res;
+  //Serial.print(F("getReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b"));
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
-  if (_wire->endTransmission() != 0) return 0xFF;
+  if (_wire->endTransmission(false) != 0) return 0xFF;
   if (_wire->requestFrom(_i2caddr, (byte)1) != 1) return 0xFF;
-  return _wire->read();
+  res= _wire->read();
+  //Serial.println(res,BIN);
+  return res;
 }
 
 // Alarm functions for all the Analog Devices RTCs with DS prefix

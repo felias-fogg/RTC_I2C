@@ -1,14 +1,14 @@
 // Simple test for I2CRTC
 // Just include one RTC class and try it out
 
-#include <RTCPCF8563.h>
+#include <RTCRS5C372.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 2
 #define PINALARM 3
 
-RTCPCF8563 RTC;
+RTCRS5C372 RTC;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -74,7 +74,7 @@ void loop() {
     if ((RTC.getCapabilities() & RTC_CAPABIL_1HZ) == 0) {
       unsupported();
       break;
-    }
+     }
     RTC.enable1Hz();
     Serial.println(F("1 Hz signal enabled"));
     break;
@@ -164,6 +164,7 @@ void loop() {
     Serial.print(F("Register 0x"));
     Serial.print(reg,HEX);
     Serial.print(F("="));
+    if (RTC.getCapabilities() & RTC_CAPABIL_SREGADDR) reg = reg << 4;
     Serial.println(RTC.getRegister(reg),BIN);
     break;
   default:
@@ -202,6 +203,7 @@ void initRTC(void)  {
   tmElements_t tm, newtm;
   bool parse=false;
   bool config=false;
+  bool valid=false;
   
   RTC.init();
   if (getDate(__DATE__,tm) && getTime(__TIME__,tm)) {
@@ -210,7 +212,8 @@ void initRTC(void)  {
     RTC.getTime(newtm);
     //Serial.println(makeTime(tm));
     //Serial.println(makeTime(newtm));
-    if (RTC.isValid() && makeTime(tm) == makeTime(newtm)) {
+    valid = RTC.isValid();
+    if (valid && makeTime(tm) == makeTime(newtm)) {
       config = true;
     }
   }
@@ -221,7 +224,12 @@ void initRTC(void)  {
     Serial.print(", Date=");
     Serial.println(__DATE__);
   } else if (parse) {
-    Serial.println("RTC Communication Error");
+    Serial.print("RTC Communication Error:\n\rInput=");
+    Serial.println(makeTime(tm));
+    Serial.print(F("Response="));
+    Serial.println(makeTime(newtm));
+    Serial.print(F("Valid="));
+    Serial.println(valid);
   } else {
     Serial.print("Could not parse info from the compiler, Time=\"");
     Serial.print(__TIME__);

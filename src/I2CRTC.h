@@ -16,11 +16,12 @@
 #include <Wire.h>
 
 #define TIMEBYTES 7
-#define RTC_CAPABIL_TEMP 0x10
-#define RTC_CAPABIL_OFFSET 0x08
-#define RTC_CAPABIL_ALARM 0x04
-#define RTC_CAPABIL_1HZ 0x02
-#define RTC_CAPABIL_32KHZ 0x01
+#define RTC_CAPABIL_32KHZ 0x01       // can generate 32 kHz signal 
+#define RTC_CAPABIL_1HZ 0x02         // can generate 1 Hz signal
+#define RTC_CAPABIL_ALARM 0x04       // has alarm functionality
+#define RTC_CAPABIL_OFFSET 0x08      // has an offset register
+#define RTC_CAPABIL_TEMP 0x10        // has a temperature sensor
+#define RTC_CAPABIL_SREGADDR 0x20    // uses a strange format for register addresses (upper nibbel)
 
 
 /* A generic RTC base class */
