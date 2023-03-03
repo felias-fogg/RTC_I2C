@@ -14,12 +14,14 @@ This library provides a universal API to a number of I2C RTCs, which are describ
 * PCF8563,
 * RS5C372,
 <!-- *  RV-3028, -->
-<!-- *  RV-3032, -->
+* RV-3032, 
 * RV-8523,
 * RV-8803,  
 * SD2405.
 
-The interface is minimal, but is just enough to get the basic functionality. And it is provided by a base class. This means you can even use many RTCs in parallel without caring about what particular model you use. I tried to identify the least common denominator. However, I wanted to have some kind of alarm, and being able to make use of an offset register and reading the temperature. Unfortunately, one RTC does not have alarms at all,  a few RTCs do not have an offset register, and many do not posses the ability to read out the temperature. In order to check at runtime what capabilities an RTC has, the method `getCapabilities()` will be useful (see table entry below). The list of capabilities and at which pins you can sense the different signals appears in a table in a section further down. 
+The interface is minimal, but is just enough to get the basic functionality. And it is provided by a base class. This means you can even use many RTCs in parallel without caring about what particular model you use. I tried to identify the least common denominator of the functionality. However, I wanted to have some kind of alarm, and being able to make use of an offset register and reading the temperature. Unfortunately, one RTC does not have alarms at all,  a few RTCs do not have an offset register, and many do not posses the ability to read out the temperature. 
+
+In order to check at runtime what capabilities an RTC has, the method `getCapabilities()` will be useful (see table entry below). The list of capabilities and at which pins you can sense the different signals appears in a table in a section further down. 
 
 In addition, one can, of course, extend each particular RTC class with methods catering for the particular RTC model, if one wishes to do so.
 
@@ -30,7 +32,7 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | Name           | Parameters                                      | Comments                                                     |
 | -------------- | ----------------------------------------------- | ------------------------------------------------------------ |
 | `begin`        | none                             | Needs to be called in the beginning. Returns `false` if unsuccessful, otherwise `true`. |
-| `init`        | none                                             | Restores state of clock to configuration after power-up. It sets 24 hout mode, disables all clock outputs and alarms, and it will also start the clock (if not already running) and clear all invalid flags. |
+| `init`        | `byte` switch-mode              | Restores state of clock to configuration after power-up. It sets 24 hour mode, disables all clock outputs and alarms, and it will also start the clock (if not already running) and clear all invalid flags. If switch mode = 0, then no switching from regular power supply to backup is enabled, if =1 , then level switching is enabled, if =2 then direct switching is enabled. The latter should only be used when Vcc and Vbat are significantly different. |
 | `isValid`      | none                                            | Returns `true` if the clock is valid and running, otherwise `false`. |
 | `setTime`      | Unix `time_t` value                           | Sets the RTC time from provided parameter. Will use the 24 hour format. |
 | `setTime` | `tmElements_t` record | Sets the RTC time from a `tmElements_t` structure. Note that it is Unix epoch based, i.e., the year field is the number of years since 1970. |

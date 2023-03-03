@@ -8,7 +8,7 @@ RTCRS5C372::RTCRS5C372(void) {
   _capabilities = RS5C372_CAPABIL;
 }
 
-void RTCRS5C372::init(void) {
+void RTCRS5C372::init(__attribute__ ((unused)) byte mode) {
   setRegister(RS5C372_CONTROL1, 0b00100000); // INT and 32K to INTRB output
   setRegister(RS5C372_CONTROL2, 0b00101000); // 24h format and 32K output disabled
   setRegister(RS5C372_OFFSET, 0); // 32.768 crystal and no trimming

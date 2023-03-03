@@ -25,7 +25,7 @@
 class RTCRS5C372: public I2CRTC {
  public:
   RTCRS5C372(void);
-  void init(void);
+  void init(byte mode);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);
   void enableAlarm(void);

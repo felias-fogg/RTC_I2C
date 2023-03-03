@@ -26,7 +26,7 @@ V0.2.3 (2.3.2023)
 - added RV-8523 (well, it is simply a synonym for PCF8523)
 - added getTemp method
 
-V0.2.4
+V0.2.4 (3.3.2023)
 - added otional parameter 'blocking' to getTime, which is false by default;
   if true, then we wait with the return until a fresh second has started.
 - added RV-8803
@@ -34,8 +34,11 @@ V0.2.4
   0-based, but it is now the bit position (for RV-8803)
 - changed handling of _wdayfirst in setTime and getTime so that wday-encoding/decoding now
   happens just once
-- added sectkion of RTC capabilitied in readme
+- added section of RTC capabilities in readme
 
 
+V0.2.5
+- added RV-3032
+- added 'mode' parameter to init, which can be used to select the battery switch-over mode
 
 

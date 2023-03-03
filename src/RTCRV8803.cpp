@@ -8,7 +8,7 @@ RTCRV8803::RTCRV8803(void) {
   _capabilities = RV8803_CAPABIL;
 }
 
-void RTCRV8803::init(void) {
+void RTCRV8803::init(__attribute__ ((unused)) byte mode) {
   setRegister(RV8803_CONTROL, 0); // clear control register
   setRegister(RV8803_STATUS, 0);  // clear all flags
   setRegister(RV8803_CLKOUT, 0);  // 32 KHz output by default

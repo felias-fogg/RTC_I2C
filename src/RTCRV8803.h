@@ -27,7 +27,7 @@
 class RTCRV8803: public I2CRTC {
  public:
   RTCRV8803(void);
-  void init(void);
+  void init(byte mode);
   bool isValid(void);
   void setTime(time_t t);
   void setTime(tmElements_t tm);

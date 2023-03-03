@@ -8,9 +8,12 @@ RTCPCF8523::RTCPCF8523(void) {
   _capabilities = PCF8523_CAPABIL;
 }
 
-void RTCPCF8523::init(void) {
+// if Vbat disabled, connect to Vcc
+void RTCPCF8523::init(byte mode) {
   setRegister(PCF8523_CONTROL, 0b00010000); // initiate power-on reset by software
-  setRegister(PCF8523_CONTROL+2, 0b00100000);  // set direct switching mode and battery low detection
+  setRegister(PCF8523_CONTROL+2, (mode == 0 ?
+				  0b01100000 :
+				  (mode == 1 ? 0 : 0b00100000))); // switch mode and battery low detection
   setRegister(PCF8523_CONTROL+1, 0); // set default value for reg 1
   setRegister(PCF8523_CLKOUT, 0b00111000); // disable clock output
 }

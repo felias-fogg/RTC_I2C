@@ -21,7 +21,7 @@
 class RTCDS3231: public RTCDSAlarm {
  public:
   RTCDS3231(void);
-  void init(void);
+  void init(byte mode);
   bool isValid(void);
   void enable32kHz(void);
   void disable32kHz(void);

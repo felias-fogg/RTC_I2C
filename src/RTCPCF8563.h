@@ -18,7 +18,7 @@
 class RTCPCF8563: public RTCPCFAlarm {
  public:
   RTCPCF8563(void);
-  void init(void);
+  void init(byte mode);
   bool isValid(void);
   void enableAlarm(void);
   void disableAlarm(void);

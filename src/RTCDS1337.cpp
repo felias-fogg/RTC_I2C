@@ -8,7 +8,7 @@ RTCDS1337::RTCDS1337(void) {
   _capabilities = DS1337_CAPABIL;
 }
 
-void RTCDS1337::init(void) {
+void RTCDS1337::init(__attribute__ ((unused)) byte mode) {
   setRegister(DS1337_CONTROL, 0b00000100); // typical value after power-on, except for bit 2 (disables SQW)
   setRegister(DS1337_STATUS, 0b00000000);  // clear OSF flag and clear alarm flags
 }

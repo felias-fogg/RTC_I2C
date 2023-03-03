@@ -8,7 +8,7 @@ RTCDS3231::RTCDS3231(void) {
   _capabilities = DS3231_CAPABIL;
 }
 
-void RTCDS3231::init(void) {
+void RTCDS3231::init(__attribute__ ((unused)) byte mode) {
   setRegister(DS3231_CONTROL, 0b00000100); // typical value after power-on, except for bit 2 (disables SQW), starts clock
   setRegister(DS3231_STATUS, 0b00000000);  // clear OSF flag, clear alarm flags, disable 32 kHz output
 }

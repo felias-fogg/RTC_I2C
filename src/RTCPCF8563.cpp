@@ -8,7 +8,7 @@ RTCPCF8563::RTCPCF8563(void) {
   _capabilities = PCF8563_CAPABIL;
 }
 
-void RTCPCF8563::init(void) {
+void RTCPCF8563::init(__attribute__ ((unused)) byte mode) {
   setRegister(PCF8563_CONTROL, 0);  
   setRegister(PCF8563_CONTROL+1, 0);
   setRegister(PCF8563_CLKOUT, 0); 

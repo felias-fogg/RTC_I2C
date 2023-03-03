@@ -1,14 +1,14 @@
 // Simple test for I2CRTC
 // Just include one RTC class and try it out
 
-#include <RTCRV8803.h>
+#include <RTCRV3032.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 2
 #define PINALARM 3
 
-RTCRV8803 RTC;
+RTCRV3032 RTC;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -205,7 +205,7 @@ void initRTC(void)  {
   bool config=false;
   bool valid=false;
   
-  RTC.init();
+  RTC.init(1); // select level switch-over mode
   if (getDate(__DATE__,tm) && getTime(__TIME__,tm)) {
     parse = true;
     RTC.setTime(tm);

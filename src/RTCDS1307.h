@@ -16,7 +16,7 @@
 class RTCDS1307: public I2CRTC {
  public:
   RTCDS1307(void);
-  void init(void);
+  void init(byte mode);
   bool isValid(void);
   void enable32kHz(void);
   void disable32kHz(void);

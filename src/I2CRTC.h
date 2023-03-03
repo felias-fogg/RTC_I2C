@@ -28,7 +28,7 @@
 class I2CRTC {
  public:
   bool begin(TwoWire *wi = &Wire);
-  virtual void init(void) = 0;
+  virtual void init(byte mode) = 0;
   virtual bool isValid(void) = 0;
   virtual void setTime(time_t t);
   virtual void setTime(tmElements_t tm);
