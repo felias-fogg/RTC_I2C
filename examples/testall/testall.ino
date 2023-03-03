@@ -1,14 +1,14 @@
 // Simple test for I2CRTC
 // Just include one RTC class and try it out
 
-#include <RTCRV8523.h>
+#include <RTCRV8803.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 2
 #define PINALARM 3
 
-RTCRV8523 RTC;
+RTCRV8803 RTC;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",

@@ -1,8 +1,8 @@
 {
-    "version": "0.2.3",
+    "version": "0.2.4",
     "name": "I2CRTC",
     "keywords": "I2C, RTC, time",
-    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523 ... and counting",
+    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803 ... and counting",
     "authors": "Bernhard Nebel",
     "license": "MIT",
     "dependencies":

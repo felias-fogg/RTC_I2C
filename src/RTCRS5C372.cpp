@@ -64,18 +64,11 @@ void RTCRS5C372::disable1Hz(void) {
   setRegister(RS5C372_CONTROL1, (clkout & 0b11111000)); 
 }
 
-// negative values make the clock faster by roughly 4.0 ppm/LSB
-// In mode 0 (correction every two hours), 1 LSB is roughly 4.34 ppm,
-// in mode 1 (correction every minute), 1 LSB is roughly 4.06 ppm.
-// The range goes from -64 to +63. 
 void RTCRS5C372::setOffset(int offset, byte mode) {
-  if (mode == 0) 
-    offset = (offset + (offset > 0 ? +217 : -217))/434;
-  else
-    offset = (offset + (offset > 0 ? +203 : -203))/406;
+  offset = (offset + (offset > 0 ? +152 : -152))/305;
   if (offset < -64) offset = -64;
   else if (offset > 63) offset = 63;
   Serial.println(offset);
   Serial.println(((offset&0x7F)|(mode<<7)));
-  setRegister(RS5C372_OFFSET, ((offset&0x7F)|(mode<<7)));
+  setRegister(RS5C372_OFFSET, (offset&0x7F));
 }

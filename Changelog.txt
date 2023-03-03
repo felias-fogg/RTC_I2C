@@ -26,6 +26,16 @@ V0.2.3 (2.3.2023)
 - added RV-8523 (well, it is simply a synonym for PCF8523)
 - added getTemp method
 
+V0.2.4
+- added otional parameter 'blocking' to getTime, which is false by default;
+  if true, then we wait with the return until a fresh second has started.
+- added RV-8803
+- _wdaybase can now also be 2, which means that the day of the week is
+  0-based, but it is now the bit position (for RV-8803)
+- changed handling of _wdayfirst in setTime and getTime so that wday-encoding/decoding now
+  happens just once
+- added sectkion of RTC capabilitied in readme
+
 
 
 

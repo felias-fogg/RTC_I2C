@@ -32,8 +32,8 @@ class I2CRTC {
   virtual bool isValid(void) = 0;
   virtual void setTime(time_t t);
   virtual void setTime(tmElements_t tm);
-  virtual time_t getTime(void);
-  virtual void getTime(tmElements_t &tm);
+  virtual time_t getTime(bool blocking = false);
+  virtual void getTime(tmElements_t &tm, bool blocking = false);
   virtual void enable32kHz(void) { };
   virtual void disable32kHz(void) { };
   virtual void enable1Hz(void) { };
@@ -52,6 +52,7 @@ class I2CRTC {
  protected:
   static byte bcd2bin(byte val) { return val - 6 * (val >> 4); }
   static byte bin2bcd(byte val) { return val + 6 * (val / 10); }
+  static byte decodewday(byte bits);
   byte _i2caddr = 0; 
   TwoWire *_wire = NULL;
   bool _started = false;

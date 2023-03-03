@@ -27,26 +27,33 @@ void I2CRTC::setTime(tmElements_t tm) {
   _wire->write(bin2bcd(tm.Second)); 
   _wire->write(bin2bcd(tm.Minute));
   _wire->write(bin2bcd(tm.Hour));
-  if (_wdayfirst)
-    _wire->write(bin2bcd(tm.Wday-1+_wdaybase));
-  _wire->write(bin2bcd(tm.Day));
   if (!_wdayfirst)
-    _wire->write(bin2bcd(tm.Wday-1+_wdaybase));
+    _wire->write(bin2bcd(tm.Day));
+  _wire->write(_wdaybase < 2 ? bin2bcd(tm.Wday-1+_wdaybase) : (1<<(tm.Wday-1)));
+  if (_wdayfirst)
+    _wire->write(bin2bcd(tm.Day));
   _wire->write(bin2bcd(tm.Month));
   _wire->write(bin2bcd(tm.Year-30)); // readjust to 2000 instead of 1970!
   _wire->endTransmission();
 }
 
 // get Unix time
-time_t I2CRTC::getTime(void) {
+time_t I2CRTC::getTime(bool blocking) {
   tmElements_t tm;
-  getTime(tm);
+  getTime(tm, blocking);
   return makeTime(tm);
 }
 
 // get time as time record
-void I2CRTC::getTime(tmElements_t &tm) {
+void I2CRTC::getTime(tmElements_t &tm, bool blocking) {
+  int timeout = INT16_MAX;
+  byte sec;
   tm = tmElements_t{0,0,0,0,0,0,0};
+
+  if (blocking) {
+    sec = getRegister(_clockreg);
+    while (sec == getRegister(_clockreg) && timeout--); // wait until next second is reached 
+  }  
   _wire->beginTransmission(_i2caddr);
   _wire->write(_clockreg);
   if (_wire->endTransmission(false) != 0) return;
@@ -54,15 +61,23 @@ void I2CRTC::getTime(tmElements_t &tm) {
   tm.Second = bcd2bin(_wire->read()) & 0x7F;
   tm.Minute = bcd2bin(_wire->read()) & 0x7F;
   tm.Hour = bcd2bin(_wire->read()) & 0x3F;
-  if (_wdayfirst) 
-    tm.Wday = (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1;
-  tm.Day = bcd2bin(_wire->read()) & 0x3F;
   if (!_wdayfirst) 
-    tm.Wday = (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1;
+    tm.Day = bcd2bin(_wire->read()) & 0x3F;
+  tm.Wday = ( _wdaybase < 2 ? (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1 : decodewday(_wire->read()));
+  if (_wdayfirst) 
+    tm.Day = bcd2bin(_wire->read()) & 0x3F;
   tm.Month = bcd2bin(_wire->read()) & 0x1F;
   tm.Year =  bcd2bin(_wire->read()) + 30; // rebase to 1970!
 }
 
+byte I2CRTC::decodewday(byte bits) {
+  for (byte res = 1; res < 8; res++) {
+    if (bits & 1) return res;
+    bits = bits >> 1;
+  }
+  return 1; // default value
+}
+    
 // set one RTC register
 void I2CRTC::setRegister(byte reg, byte val) {
   //Serial.print(F("setReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b")); Serial.println(val,BIN);
