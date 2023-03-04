@@ -58,3 +58,4 @@ V0.3.2 (4.3.2023)
 - added SD2405
 - added possible extra '1' bits in clock register for some RTCs by new
   var _bit7set
+- moved constructor into header file
