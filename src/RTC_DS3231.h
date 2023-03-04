@@ -1,9 +1,9 @@
-/* This is the class for DS3231 that can be used as part of the univRTC library */
+/* This is the class for DS3231 that can be used as part of the RTC_I2C library */
 
-#ifndef _RTCDS3231_H_
-#define _RTCDS3231_H_
+#ifndef _RTC_DS3231_H_
+#define _RTC_DS3231_H_
 
-#include <I2CRTC.h>
+#include <RTC_I2C.h>
 
 
 #define DS3231_ADDRESS 0x68 // I2C address for DS3231
@@ -15,13 +15,13 @@
 #define DS3231_TEMPMSB 0x11 // MSB of temperature register
 #define DS3231_WDAYBASE 1    // wday range from 1 to 7
 #define DS3231_WDAYFIRST true    // wday comes before day of month in clock reg
-#define DS3231_CAPABIL  (RTC_CAPABIL_32KHZ|RTC_CAPABIL_1HZ|RTC_CAPABIL_ALARM|RTC_CAPABIL_OFFSET|RTC_CAPABIL_TEMP)
+#define DS3231_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
 
 
-class RTCDS3231: public RTCDSAlarm {
+class DS3231: public DSAlarm {
  public:
-  RTCDS3231(void);
-  void init(byte mode);
+  DS3231(void);
+  void init(byte mode=1);
   bool isValid(void);
   void enable32kHz(void);
   void disable32kHz(void);

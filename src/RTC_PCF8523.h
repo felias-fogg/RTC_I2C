@@ -1,13 +1,13 @@
-/* This is the class for PCF8523 that can be used as part of the I2CRTC library */
+/* This is the class for PCF8523 that can be used as part of the RTC_I2C library */
 /* When 1Hz or 32kHz signals are enables, they can be sensed at CLKOUT and INT1.
  * The alarm interrupt can be sensed at INT1. When alarm is active, then there is no
  * 1Hz or 32kHz output on INT1.
  */
 
-#ifndef _RTCPCF8523_H_
-#define _RTCPCF8523_H_
+#ifndef _RTC_PCF8523_H_
+#define _RTC_PCF8523_H_
 
-#include <I2CRTC.h>
+#include <RTC_I2C.h>
 
 
 #define PCF8523_ADDRESS 0x68 // I2C address for PCF8523
@@ -17,13 +17,13 @@
 #define PCF8523_CLKOUT  0x0F // Clock out control (and timer)
 #define PCF8523_WDAYBASE 0    // wday range from 0 to 6
 #define PCF8523_WDAYFIRST false    // wday comes after day of month in clock reg
-#define PCF8523_CAPABIL  (RTC_CAPABIL_32KHZ|RTC_CAPABIL_1HZ|RTC_CAPABIL_ALARM|RTC_CAPABIL_OFFSET)
+#define PCF8523_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
 
 
-class RTCPCF8523: public RTCPCFAlarm {
+class PCF8523: public PCFAlarm {
  public:
-  RTCPCF8523(void);
-  void init(byte mode);
+  PCF8523(void);
+  void init(byte mode=1);
   bool isValid(void);
   void enableAlarm(void);
   void disableAlarm(void);

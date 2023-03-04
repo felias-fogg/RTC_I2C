@@ -1,4 +1,4 @@
-/* This is the class for RV8803 that can be used as part of the I2CRTC library */
+/* This is the class for RV8803 that can be used as part of the RTC_I2C library */
 
 /* Note that the CLKOUT pin can only be disabled by holding CLKOE low. For this reason
  * the two disable functions are no-ops.
@@ -6,10 +6,10 @@
  * we need to read twice if the seconds equal 59.
  */
 
-#ifndef _RTCRV8803_H_
-#define _RTCRV8803_H_
+#ifndef _RTC_RV8803_H_
+#define _RTC_RV8803_H_
 
-#include <I2CRTC.h>
+#include <RTC_I2C.h>
 
 
 #define RV8803_ADDRESS 0x32 // I2C address for RV8803
@@ -21,13 +21,13 @@
 #define RV8803_OFFSET  0x2C // Offset register
 #define RV8803_WDAYBASE 2    // wday range from 0 to 6, but it is now the 1-bit at this bit position!
 #define RV8803_WDAYFIRST true    // wday comes after day of month in clock reg
-#define RV8803_CAPABIL  (RTC_CAPABIL_32KHZ|RTC_CAPABIL_1HZ|RTC_CAPABIL_ALARM|RTC_CAPABIL_OFFSET)
+#define RV8803_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
 
 
-class RTCRV8803: public I2CRTC {
+class RV8803: public RTC {
  public:
-  RTCRV8803(void);
-  void init(byte mode);
+  RV8803(void);
+  void init(byte mode=1);
   bool isValid(void);
   void setTime(time_t t);
   void setTime(tmElements_t tm);

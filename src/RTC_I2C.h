@@ -8,27 +8,27 @@
  *
  *****************************************************************************************/
 
-#ifndef _UNIVRTC_H_
-#define _UNIVRTC_H_
+#ifndef _RTC_I2C_H_
+#define _RTC_I2C_H_
 
 #include <Arduino.h>
 #include <TimeLib.h>
 #include <Wire.h>
 
 #define TIMEBYTES 7
-#define RTC_CAPABIL_32KHZ 0x01       // can generate 32 kHz signal 
-#define RTC_CAPABIL_1HZ 0x02         // can generate 1 Hz signal
-#define RTC_CAPABIL_ALARM 0x04       // has alarm functionality
-#define RTC_CAPABIL_OFFSET 0x08      // has an offset register
-#define RTC_CAPABIL_TEMP 0x10        // has a temperature sensor
-#define RTC_CAPABIL_SREGADDR 0x20    // uses a strange format for register addresses (upper nibbel)
+#define RTC_CAP_32KHZ 0x01       // can generate 32 kHz signal 
+#define RTC_CAP_1HZ 0x02         // can generate 1 Hz signal
+#define RTC_CAP_ALARM 0x04       // has alarm functionality
+#define RTC_CAP_OFFSET 0x08      // has an offset register
+#define RTC_CAP_TEMP 0x10        // has a temperature sensor
+#define RTC_CAP_SREGADDR 0x20    // uses a strange format for register addresses (upper nibbel)
 
 
 /* A generic RTC base class */
-class I2CRTC {
+class RTC {
  public:
   bool begin(TwoWire *wi = &Wire);
-  virtual void init(byte mode) = 0;
+  virtual void init(byte mode=1) = 0;
   virtual bool isValid(void) = 0;
   virtual void setTime(time_t t);
   virtual void setTime(tmElements_t tm);
@@ -62,7 +62,7 @@ class I2CRTC {
   byte _capabilities; // lists all capabilities of this RTC
 };
 
-class RTCDSAlarm : public I2CRTC {
+class DSAlarm : public RTC {
  public:
   void setAlarm(byte minute, byte hour);
   void enableAlarm(void);
@@ -71,7 +71,7 @@ class RTCDSAlarm : public I2CRTC {
   void clearAlarm(void);
 };
 
-class RTCPCFAlarm : public I2CRTC {
+class PCFAlarm : public RTC {
  public:
   void setAlarm(byte minute, byte hour);
   bool senseAlarm(void);

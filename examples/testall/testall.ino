@@ -1,14 +1,14 @@
-// Simple test for I2CRTC
-// Just include one RTC class and try it out
+// Simple test for RTC_I2C
+// Just include one RTC class and try out all implemeted methods
 
-#include <RTCRV3032.h>
+#include <RTC_RV3028.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
-#define PIN32KHZ 2
-#define PINALARM 3
+#define PIN32KHZ 3
+#define PINALARM 2
 
-RTCRV3032 RTC;
+RV3028 RTC;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -71,7 +71,7 @@ void loop() {
     showTime(tm);
     break;
   case '1':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_1HZ) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_1HZ) == 0) {
       unsupported();
       break;
      }
@@ -79,7 +79,7 @@ void loop() {
     Serial.println(F("1 Hz signal enabled"));
     break;
   case '3':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_32KHZ) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_32KHZ) == 0) {
       unsupported();
       break;
     }
@@ -111,7 +111,7 @@ void loop() {
     Serial.println(digitalRead(PINALARM));
     break;
   case 'h':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_ALARM) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
@@ -124,24 +124,27 @@ void loop() {
     Serial.println(tm.Minute);
     break;
   case 'n':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_ALARM) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
     RTC.disableAlarm();
     break;
   case 'a':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_ALARM) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
     alarm = RTC.senseAlarm();
     Serial.print(F("Alarm: "));
     Serial.println(alarm);
-    if (alarm) RTC.clearAlarm();
+    if (alarm) {
+      RTC.clearAlarm();
+      RTC.disableAlarm();
+    }
     break;
   case 't':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_TEMP) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_TEMP) == 0) {
       unsupported();
       break;
     }
@@ -150,7 +153,7 @@ void loop() {
     Serial.println(temp);
     break;
   case 'o':
-    if ((RTC.getCapabilities() & RTC_CAPABIL_OFFSET) == 0) {
+    if ((RTC.getCapabilities() & RTC_CAP_OFFSET) == 0) {
       unsupported();
       break;
     }
@@ -164,7 +167,7 @@ void loop() {
     Serial.print(F("Register 0x"));
     Serial.print(reg,HEX);
     Serial.print(F("="));
-    if (RTC.getCapabilities() & RTC_CAPABIL_SREGADDR) reg = reg << 4;
+    if (RTC.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
     Serial.println(RTC.getRegister(reg),BIN);
     break;
   default:

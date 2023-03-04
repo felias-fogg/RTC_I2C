@@ -1,15 +1,15 @@
-#include <RTCPCF8523.h>
+#include <RTC_PCF8523.h>
 
-RTCPCF8523::RTCPCF8523(void) {
+PCF8523::PCF8523(void) {
   _i2caddr = PCF8523_ADDRESS;
   _clockreg = PCF8523_CLOCKREG;
   _wdaybase = PCF8523_WDAYBASE;
   _wdayfirst = PCF8523_WDAYFIRST;
-  _capabilities = PCF8523_CAPABIL;
+  _capabilities = PCF8523_CAP;
 }
 
 // if Vbat disabled, connect to Vcc
-void RTCPCF8523::init(byte mode) {
+void PCF8523::init(byte mode) {
   setRegister(PCF8523_CONTROL, 0b00010000); // initiate power-on reset by software
   setRegister(PCF8523_CONTROL+2, (mode == 0 ?
 				  0b01100000 :
@@ -18,39 +18,39 @@ void RTCPCF8523::init(byte mode) {
   setRegister(PCF8523_CLKOUT, 0b00111000); // disable clock output
 }
 
-bool RTCPCF8523::isValid(void) {
+bool PCF8523::isValid(void) {
   return ((getRegister(PCF8523_CONTROL+2) & 0b00000100) == 0) && // no battery low flag and
     ((getRegister(PCF8523_CONTROL) & 0b00100000) == 0) && // oscillator is running
     ((getRegister(PCF8523_CLOCKREG) & 0b10000000) == 0);   // OS flag cleared
 }
 
-void RTCPCF8523::enableAlarm(void) { 
+void PCF8523::enableAlarm(void) { 
   byte ctr = getRegister(PCF8523_CONTROL);
   setRegister(PCF8523_CONTROL, (ctr & 0b11111101) | 0b00000010);
 }
 
-void RTCPCF8523::disableAlarm(void) {
+void PCF8523::disableAlarm(void) {
   byte ctr = getRegister(PCF8523_CONTROL);
   setRegister(PCF8523_CONTROL, (ctr & 0b11111101) | 0b00000000); 
 }
 
 
-void RTCPCF8523::enable32kHz(void) {
+void PCF8523::enable32kHz(void) {
   byte clkout = getRegister(PCF8523_CLKOUT);
   setRegister(PCF8523_CLKOUT, (clkout & 0b11000111) | 0b00000000); 
 }
 
-void RTCPCF8523::disable32kHz(void) {
+void PCF8523::disable32kHz(void) {
   byte clkout = getRegister(PCF8523_CLKOUT);
   setRegister(PCF8523_CLKOUT, (clkout & 0b11000111) | 0b00111000); 
 }
 
-void RTCPCF8523::enable1Hz(void) {
+void PCF8523::enable1Hz(void) {
   byte clkout = getRegister(PCF8523_CLKOUT);
   setRegister(PCF8523_CLKOUT, (clkout & 0b11000111) | 0b00110000); 
 }
 
-void RTCPCF8523::disable1Hz(void) {
+void PCF8523::disable1Hz(void) {
   disable32kHz();
 }
 
@@ -58,7 +58,7 @@ void RTCPCF8523::disable1Hz(void) {
 // In mode 0 (correction every two hours), 1 LSB is roughly 4.34 ppm,
 // in mode 1 (correction every minute), 1 LSB is roughly 4.06 ppm.
 // The range goes from -64 to +63. 
-void RTCPCF8523::setOffset(int offset, byte mode) {
+void PCF8523::setOffset(int offset, byte mode) {
   if (mode == 0) 
     offset = (offset + (offset > 0 ? +217 : -217))/434;
   else

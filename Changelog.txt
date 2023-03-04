@@ -37,8 +37,15 @@ V0.2.4 (3.3.2023)
 - added section of RTC capabilities in readme
 
 
-V0.2.5
+V0.2.5 (3.3.2023)
 - added RV-3032
 - added 'mode' parameter to init, which can be used to select the battery switch-over mode
 
-
+V0.3.0 (4.3.2023)
+- added update of registers from RAM to EEPROM in RV-3032
+- fixed problem with switch-over confusion
+- added 3028
+- added 3028U (using the Unix counter for timekeeping)
+- added timeouts in all loops where we wait for a condition
+- renamed library and classes to make them more readable
+- new example: iterate

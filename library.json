@@ -1,8 +1,8 @@
 {
-    "version": "0.2.5",
-    "name": "I2CRTC",
+    "version": "0.3.0",
+    "name": "RTC_I2C",
     "keywords": "I2C, RTC, time",
-    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803, RV-3032, ... and counting",
+    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803, RV-3032, RV-3028, ... and counting",
     "authors": "Bernhard Nebel",
     "license": "MIT",
     "dependencies":
@@ -18,7 +18,7 @@
     "repository":
     {
 	"type": "git",
-	"url": "https://github.com/felias-fogg/I2CRTC"
+	"url": "https://github.com/felias-fogg/RTC_I2C"
     },
     "frameworks": "arduino",
     "platforms":

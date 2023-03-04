@@ -1,9 +1,9 @@
-/* This is the class for DS1337 that can be used as part of the I2CRTC library */
+/* This is the class for DS1337 that can be used as part of the RTC_I2C library */
 
-#ifndef _RTCDS1337_H_
-#define _RTCDS1337_H_
+#ifndef _RTC_DS1337_H_
+#define _RTC_DS1337_H_
 
-#include <I2CRTC.h>
+#include <RTC_I2C.h>
 
 
 #define DS1337_ADDRESS 0x68 // I2C address for DS1337
@@ -13,13 +13,13 @@
 #define DS1337_STATUS  0x0F // Status register
 #define DS1337_WDAYBASE 1    // wday range from 1 to 7
 #define DS1337_WDAYFIRST true //  wday comes before day of month in clock reg
-#define DS1337_CAPABIL    (RTC_CAPABIL_32KHZ|RTC_CAPABIL_1HZ|RTC_CAPABIL_ALARM)
+#define DS1337_CAP    (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM)
 
 
-class RTCDS1337: public RTCDSAlarm {
+class DS1337: public DSAlarm {
  public:
-  RTCDS1337(void);
-  void init(byte mode);
+  DS1337(void);
+  void init(byte mode=1);
   bool isValid(void);
   void enable32kHz(void);
   void disable32kHz(void);

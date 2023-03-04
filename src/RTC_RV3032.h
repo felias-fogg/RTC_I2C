@@ -1,9 +1,10 @@
-/* This is the class for RV3032 that can be used as part of the I2CRTC library */
+/* This is the class for RV3032 that can be used as part of the RTC_I2C library */
 
-#ifndef _RTCRV3032_H_
-#define _RTCRV3032_H_
+#ifndef _RTC_RV3032_H_
+#define _RTC_RV3032_H_
 
-#include <I2CRTC.h>
+#include <RTC_I2C.h>
+#include <util/delay.h>
 
 
 #define RV3032_ADDRESS 0x51 // I2C address for RV3032
@@ -12,19 +13,23 @@
 #define RV3032_STATUS 0x0D // Status register
 #define RV3032_CONTROL 0x10 // Control register
 #define RV3032_TEMP    0x0F // Temperature register
-#define RV3032_BSM     0x37 // battery switch mode register
-#define RV3032_COE 0xC0 // Clockout enable register
-#define RV3032_CLKOUT 0xC3 // Clockout registerhg
+#define RV3032_BUSY 0x0E // contains EE busy bit
+#define RV3032_COE 0xC0 // Clockout enable & BSM register
+#define RV3032_CLKOUT 0xC3 // Clockout register
 #define RV3032_OFFSET  0xC1 // Offset register
+#define RV3032_EECMD   0x3F // EEPROM command
+#define RV3032_EEDATA  0x3E // value for  EEPROM data transfer 
+#define RV3032_EEADDR  0x3D // address for EEPROM data transfer
+
 #define RV3032_WDAYBASE 0    // wday range from 0 to 6, 
 #define RV3032_WDAYFIRST true    // wday comes after day of month in clock reg
-#define RV3032_CAPABIL  (RTC_CAPABIL_32KHZ|RTC_CAPABIL_1HZ|RTC_CAPABIL_ALARM|RTC_CAPABIL_OFFSET|RTC_CAPABIL_TEMP)
+#define RV3032_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
 
 
-class RTCRV3032: public I2CRTC {
+class RV3032: public RTC {
  public:
-  RTCRV3032(void);
-  void init(byte mode);
+  RV3032(void);
+  void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);
   bool senseAlarm(void);
@@ -36,5 +41,9 @@ class RTCRV3032: public I2CRTC {
   void enable1Hz(void);
   void disable1Hz(void);
   void setOffset(int offset, byte mode=1);
+
+ protected:
+  void updateEEPROMByte(byte reg);
+ 
 };
 #endif
