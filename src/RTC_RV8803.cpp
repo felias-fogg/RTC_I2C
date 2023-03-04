@@ -1,13 +1,5 @@
 #include <RTC_RV8803.h>
 
-RV8803::RV8803(void) {
-  _i2caddr = RV8803_ADDRESS;
-  _clockreg = RV8803_CLOCKREG;
-  _wdaybase = RV8803_WDAYBASE;
-  _wdayfirst = RV8803_WDAYFIRST;
-  _capabilities = RV8803_CAP;
-}
-
 void RV8803::init(__attribute__ ((unused)) byte mode) {
   setRegister(RV8803_CONTROL, 0); // clear control register
   setRegister(RV8803_STATUS, 0);  // clear all flags

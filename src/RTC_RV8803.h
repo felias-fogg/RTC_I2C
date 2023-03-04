@@ -21,12 +21,20 @@
 #define RV8803_OFFSET  0x2C // Offset register
 #define RV8803_WDAYBASE 2    // wday range from 0 to 6, but it is now the 1-bit at this bit position!
 #define RV8803_WDAYFIRST true    // wday comes after day of month in clock reg
+#define RV8803_BIT7 0
 #define RV8803_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
 
 
 class RV8803: public RTC {
  public:
-  RV8803(void);
+  RV8803(void) {
+  _i2caddr = RV8803_ADDRESS;
+  _clockreg = RV8803_CLOCKREG;
+  _wdaybase = RV8803_WDAYBASE;
+  _wdayfirst = RV8803_WDAYFIRST;
+  _capabilities = RV8803_CAP;
+  _bit7set = RV8803_BIT7;
+};
   void init(byte mode=1);
   bool isValid(void);
   void setTime(time_t t);

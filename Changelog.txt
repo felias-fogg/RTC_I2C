@@ -50,5 +50,11 @@ V0.3.0 (4.3.2023)
 - renamed library and classes to make them more readable
 - new example: iterate
 
-V0.3.1
-- added MCP79140 
+V0.3.1 (4.3.2023)
+- added MCP79140
+- fixed masking of unused bits in the clock register
+
+V0.3.2 (4.3.2023)
+- added SD2405
+- added possible extra '1' bits in clock register for some RTCs by new
+  var _bit7set

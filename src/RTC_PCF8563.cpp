@@ -1,12 +1,5 @@
 #include <RTC_PCF8563.h>
 
-PCF8563::PCF8563(void) {
-  _i2caddr = PCF8563_ADDRESS;
-  _clockreg = PCF8563_CLOCKREG;
-  _wdaybase = PCF8563_WDAYBASE;
-  _wdayfirst = PCF8563_WDAYFIRST;
-  _capabilities = PCF8563_CAP;
-}
 
 void PCF8563::init(__attribute__ ((unused)) byte mode) {
   setRegister(PCF8563_CONTROL, 0);  

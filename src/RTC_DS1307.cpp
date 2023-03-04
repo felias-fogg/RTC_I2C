@@ -1,14 +1,5 @@
 #include <RTC_DS1307.h>
 
-DS1307::DS1307(void) {
-  _i2caddr = DS1307_ADDRESS;
-  _clockreg = DS1307_CLOCKREG;
-  _wdaybase = DS1307_WDAYBASE;
-  _wdayfirst = DS1307_WDAYFIRST;
-  _capabilities = DS1307_CAP;
-  
-}
-
 void DS1307::init(__attribute__ ((unused)) byte mode) {
   setRegister(DS1307_CONTROL, 0b00000011); // typical value after power-on
   byte secs = getRegister(DS1307_CLOCKREG);  // seconds register; high bit is the osc enabled bit

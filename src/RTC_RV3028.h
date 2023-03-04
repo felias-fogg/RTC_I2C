@@ -21,12 +21,20 @@
 
 #define RV3028_WDAYBASE 0    // wday range from 0 to 6, 
 #define RV3028_WDAYFIRST true    // wday comes after day of month in clock reg
+#define RV3028_BIT7 0
 #define RV3028_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
 
 
 class RV3028: public RTC {
  public:
-  RV3028(void);
+  RV3028(void)  {
+    _i2caddr = RV3028_ADDRESS;
+    _clockreg = RV3028_CLOCKREG;
+    _wdaybase = RV3028_WDAYBASE;
+    _wdayfirst = RV3028_WDAYFIRST;
+    _capabilities = RV3028_CAP;
+    _bit7set =  RV3028_BIT7;
+  };
   void init(byte mode=1);
   bool isValid(void);
   virtual void setAlarm(byte minute, byte hour);

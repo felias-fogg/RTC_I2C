@@ -1,13 +1,5 @@
 #include <RTC_RS5C372.h>
 
-RS5C372::RS5C372(void) {
-  _i2caddr = RS5C372_ADDRESS;
-  _clockreg = RS5C372_CLOCKREG;
-  _wdaybase = RS5C372_WDAYBASE;
-  _wdayfirst = RS5C372_WDAYFIRST;
-  _capabilities = RS5C372_CAP;
-}
-
 void RS5C372::init(__attribute__ ((unused)) byte mode) {
   setRegister(RS5C372_CONTROL1, 0b00100000); // INT and 32K to INTRB output
   setRegister(RS5C372_CONTROL2, 0b00101000); // 24h format and 32K output disabled

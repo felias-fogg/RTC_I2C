@@ -1,13 +1,5 @@
 #include <RTC_RV3028U.h>
 
-RV3028U::RV3028U(void) {
-  _i2caddr = RV3028_ADDRESS;
-  _clockreg = 0;
-  _wdaybase = 0;
-  _wdayfirst = 0;
-  _capabilities = RV3028U_CAP;
-}
-
 // get Unix time (from a Unix time counter)
 time_t RV3028U::getTime(bool blocking) {
   time_t t1=0, t2;

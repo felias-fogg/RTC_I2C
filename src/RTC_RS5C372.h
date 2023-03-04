@@ -17,6 +17,7 @@
 #define RS5C372_OFFSET  (0x07<<4) // Offset register
 #define RS5C372_WDAYBASE 0    // wday range from 0 to 6
 #define RS5C372_WDAYFIRST true    // wday comes before day of month in clock reg
+#define RS5C372_BIT7 0
 #define RS5C372_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_SREGADDR)
 
 
@@ -24,7 +25,14 @@
  * INTRB is the alarm interrupt output */
 class RS5C372: public RTC {
  public:
-  RS5C372(void);
+  RS5C372(void)  {
+  _i2caddr = RS5C372_ADDRESS;
+  _clockreg = RS5C372_CLOCKREG;
+  _wdaybase = RS5C372_WDAYBASE;
+  _wdayfirst = RS5C372_WDAYFIRST;
+  _capabilities = RS5C372_CAP;
+  _bit7set = RS5C372_BIT7;
+}
   void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);

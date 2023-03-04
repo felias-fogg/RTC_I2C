@@ -20,7 +20,7 @@
 #define RV3032_EECMD   0x3F // EEPROM command
 #define RV3032_EEDATA  0x3E // value for  EEPROM data transfer 
 #define RV3032_EEADDR  0x3D // address for EEPROM data transfer
-
+#define RV3032_BIT7 0
 #define RV3032_WDAYBASE 0    // wday range from 0 to 6, 
 #define RV3032_WDAYFIRST true    // wday comes after day of month in clock reg
 #define RV3032_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
@@ -28,7 +28,14 @@
 
 class RV3032: public RTC {
  public:
-  RV3032(void);
+  RV3032(void) {
+    _i2caddr = RV3032_ADDRESS;
+    _clockreg = RV3032_CLOCKREG;
+    _wdaybase = RV3032_WDAYBASE;
+    _wdayfirst = RV3032_WDAYFIRST;
+    _capabilities = RV3032_CAP;
+    _bit7set = RV3032_BIT7;
+  };
   void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);

@@ -1,13 +1,5 @@
 #include <RTC_PCF8523.h>
 
-PCF8523::PCF8523(void) {
-  _i2caddr = PCF8523_ADDRESS;
-  _clockreg = PCF8523_CLOCKREG;
-  _wdaybase = PCF8523_WDAYBASE;
-  _wdayfirst = PCF8523_WDAYFIRST;
-  _capabilities = PCF8523_CAP;
-}
-
 // if Vbat disabled, connect to Vcc
 void PCF8523::init(byte mode) {
   setRegister(PCF8523_CONTROL, 0b00010000); // initiate power-on reset by software

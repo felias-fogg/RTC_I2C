@@ -1,13 +1,5 @@
 #include <RTC_MCP79410.h>
 
-MCP79410::MCP79410(void) {
-  _i2caddr = MCP79410_ADDRESS;
-  _clockreg = MCP79410_CLOCKREG;
-  _wdaybase = MCP79410_WDAYBASE;
-  _wdayfirst = MCP79410_WDAYFIRST;
-  _capabilities = MCP79410_CAP;
-}
-
 void MCP79410::init(byte mode) {
   setRegister(MCP79410_CONTROL, 0x80);
 }
@@ -15,17 +7,6 @@ void MCP79410::init(byte mode) {
 bool MCP79410::isValid(void) {
   return ((getRegister(MCP79410_STATUS) & 0b10000) == 0); // osciallator is running
 }
-
-void MCP79410::setTime(tmElements_t tm) {
-  RTC::setTime(tm);
-  setRegister(MCP79410_CLOCKREG, getRegister(MCP79410_CLOCKREG) | 0x80); // set start bit = 1
-}
-
-void MCP79410::setTime(time_t t) {
-  RTC::setTime(t);
-  setRegister(MCP79410_CLOCKREG, getRegister(MCP79410_CLOCKREG) | 0x80); // set start bit = 1
-}
-
 
 void MCP79410::setAlarm(byte minute, byte hour) {
   tmElements_t tm;

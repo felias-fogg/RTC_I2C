@@ -1,13 +1,5 @@
 #include <RTC_DS3231.h>
 
-DS3231::DS3231(void) {
-  _i2caddr = DS3231_ADDRESS;
-  _clockreg = DS3231_CLOCKREG;
-  _wdaybase = DS3231_WDAYBASE;
-  _wdayfirst = DS3231_WDAYFIRST;
-  _capabilities = DS3231_CAP;
-}
-
 void DS3231::init(__attribute__ ((unused)) byte mode) {
   setRegister(DS3231_CONTROL, 0b00000100); // typical value after power-on, except for bit 2 (disables SQW), starts clock
   setRegister(DS3231_STATUS, 0b00000000);  // clear OSF flag, clear alarm flags, disable 32 kHz output

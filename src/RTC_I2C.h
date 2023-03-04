@@ -61,6 +61,7 @@ class RTC {
   byte _wdaybase;  // base of weekday counting 
   bool _wdayfirst; // true when weekday comes before day in clock register
   byte _capabilities; // lists all capabilities of this RTC
+  byte _bit7set; // if the 7th bit in a byte of the clock register must be set (bit 0=sec, bit 1=min, ...)
 };
 
 class DSAlarm : public RTC {

@@ -12,12 +12,20 @@
 #define PCF8563_CLKOUT  0x0D // Clock out control (and timer)
 #define PCF8563_WDAYBASE 0    // wday range from 0 to 6
 #define PCF8563_WDAYFIRST false    // wday comes after day of month in clock reg
+#define PCF8563_BIT7 0
 #define PCF8563_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM)
 
 
 class PCF8563: public PCFAlarm {
  public:
-  PCF8563(void);
+  PCF8563(void)  {
+    _i2caddr = PCF8563_ADDRESS;
+    _clockreg = PCF8563_CLOCKREG;
+    _wdaybase = PCF8563_WDAYBASE;
+    _wdayfirst = PCF8563_WDAYFIRST;
+    _capabilities = PCF8563_CAP;
+    _bit7set = PCF8563_BIT7;
+  };
   void init(byte mode=1);
   bool isValid(void);
   void enableAlarm(void);

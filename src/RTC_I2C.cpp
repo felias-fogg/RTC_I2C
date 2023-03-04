@@ -25,15 +25,15 @@ void RTC::setTime(time_t t) {
 void RTC::setTime(tmElements_t tm) {
   _wire->beginTransmission(_i2caddr);
   _wire->write(_clockreg);
-  _wire->write(bin2bcd(tm.Second)); 
-  _wire->write(bin2bcd(tm.Minute));
-  _wire->write(bin2bcd(tm.Hour));
+  _wire->write(bin2bcd(tm.Second) | ((_bit7set & 1) ? 0x80 : 0)); 
+  _wire->write(bin2bcd(tm.Minute) | ((_bit7set & (1<<1)) ? 0x80 : 0));
+  _wire->write(bin2bcd(tm.Hour)   | ((_bit7set & (1<<2)) ? 0x80 : 0));
   if (!_wdayfirst)
-    _wire->write(bin2bcd(tm.Day));
-  _wire->write(_wdaybase < 2 ? bin2bcd(tm.Wday-1+_wdaybase) : (1<<(tm.Wday-1)));
+    _wire->write(bin2bcd(tm.Day)   | ((_bit7set & (1<<4)) ? 0x80 : 0));
+  _wire->write((_wdaybase < 2 ? bin2bcd(tm.Wday-1+_wdaybase) : (1<<(tm.Wday-1))) | ((_bit7set & (1<<3)) ? 0x80 : 0));
   if (_wdayfirst)
-    _wire->write(bin2bcd(tm.Day));
-  _wire->write(bin2bcd(tm.Month));
+    _wire->write(bin2bcd(tm.Day) | ((_bit7set & (1<<4)) ? 0x80 : 0));
+  _wire->write(bin2bcd(tm.Month) | ((_bit7set & (1<<5)) ? 0x80 : 0));
   _wire->write(bin2bcd(tm.Year-30)); // readjust to 2000 instead of 1970!
   _wire->endTransmission();
 }

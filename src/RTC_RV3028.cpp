@@ -1,13 +1,5 @@
 #include <RTC_RV3028.h>
 
-RV3028::RV3028(void) {
-  _i2caddr = RV3028_ADDRESS;
-  _clockreg = RV3028_CLOCKREG;
-  _wdaybase = RV3028_WDAYBASE;
-  _wdayfirst = RV3028_WDAYFIRST;
-  _capabilities = RV3028_CAP;
-}
-
 void RV3028::init(byte mode) {
   setRegister(RV3028_CONTROL, 0); // clear control1 register
   setRegister(RV3028_CONTROL+1, 0); // clear control2 register
