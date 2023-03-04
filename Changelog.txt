@@ -49,3 +49,6 @@ V0.3.0 (4.3.2023)
 - added timeouts in all loops where we wait for a condition
 - renamed library and classes to make them more readable
 - new example: iterate
+
+V0.3.1
+- added MCP79140 

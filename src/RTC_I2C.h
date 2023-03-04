@@ -22,6 +22,7 @@
 #define RTC_CAP_OFFSET 0x08      // has an offset register
 #define RTC_CAP_TEMP 0x10        // has a temperature sensor
 #define RTC_CAP_SREGADDR 0x20    // uses a strange format for register addresses (upper nibbel)
+#define RTC_CAP_CANRESTART 0x40  // knows how to handle I2C restart without an explicit STOP condition
 
 
 /* A generic RTC base class */

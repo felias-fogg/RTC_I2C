@@ -59,15 +59,15 @@ void RTC::getTime(tmElements_t &tm, bool blocking) {
   _wire->write(_clockreg);
   if (_wire->endTransmission(false) != 0) return;
   if (_wire->requestFrom(_i2caddr, (byte)7) != 7) return;
-  tm.Second = bcd2bin(_wire->read()) & 0x7F;
-  tm.Minute = bcd2bin(_wire->read()) & 0x7F;
-  tm.Hour = bcd2bin(_wire->read()) & 0x3F;
+  tm.Second = bcd2bin(_wire->read() & 0x7F);
+  tm.Minute = bcd2bin(_wire->read() & 0x7F);
+  tm.Hour = bcd2bin(_wire->read() & 0x3F) ;
   if (!_wdayfirst) 
-    tm.Day = bcd2bin(_wire->read()) & 0x3F;
-  tm.Wday = ( _wdaybase < 2 ? (bcd2bin(_wire->read()) & 0x07) - _wdaybase + 1 : decodewday(_wire->read()));
+    tm.Day = bcd2bin(_wire->read() & 0x3F);
+  tm.Wday = ( _wdaybase < 2 ? (bcd2bin(_wire->read() & 0x07)) - _wdaybase + 1 : decodewday(_wire->read()));
   if (_wdayfirst) 
-    tm.Day = bcd2bin(_wire->read()) & 0x3F;
-  tm.Month = bcd2bin(_wire->read()) & 0x1F;
+    tm.Day = bcd2bin(_wire->read() & 0x3F);
+  tm.Month = bcd2bin(_wire->read() & 0x1F) ;
   tm.Year =  bcd2bin(_wire->read()) + 30; // rebase to 1970!
 }
 

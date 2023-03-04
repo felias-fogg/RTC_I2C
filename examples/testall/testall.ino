@@ -1,14 +1,14 @@
 // Simple test for RTC_I2C
 // Just include one RTC class and try out all implemeted methods
 
-#include <RTC_RV3028.h>
+#include <RTC_MCP79410.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
-#define PIN32KHZ 3
+#define PIN32KHZ 2
 #define PINALARM 2
 
-RV3028 RTC;
+MCP79410 rtc;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -26,7 +26,7 @@ void setup(void) {
   while (!Serial) ; // wait for Arduino Serial Monitor
   Serial.println();
   Serial.println(F("I2CRTC interactive test")); 
-  if (!RTC.begin()) {
+  if (!rtc.begin()) {
     Serial.println(F("RTC not present!"));
     while (1);
   }
@@ -40,6 +40,7 @@ void loop() {
   bool alarm;
   int offset;
   int reg;
+  int val;
   unsigned long pw;
   
   while (c <= ' ') {
@@ -52,43 +53,43 @@ void loop() {
     break;
   case 's': initRTC();
     break;
-  case 'c': RTC.getTime(tm);
+  case 'c': rtc.getTime(tm);
     showTime(tm);
-    if (!RTC.isValid()) Serial.println(F("(Time may be invalid)"));
+    if (!rtc.isValid()) Serial.println(F("(Time may be invalid)"));
     break;
-  case 'd': RTC.getTime(tm);
+  case 'd': rtc.getTime(tm);
     showDate(tm);
-    if (!RTC.isValid()) Serial.println(F("(Date may be invalid)"));
+    if (!rtc.isValid()) Serial.println(F("(Date may be invalid)"));
     break;
-  case 'f': RTC.getTime(tm);
+  case 'f': rtc.getTime(tm);
     if (tm.Minute < 2) tm.Minute += 58;
     else {
       if (tm.Hour++ == 23) tm.Hour = 0;
       tm.Minute -= 2;
     }
-    RTC.setTime(tm);
+    rtc.setTime(tm);
     Serial.print(F("Time has advanced by 58 minutes: "));
     showTime(tm);
     break;
   case '1':
-    if ((RTC.getCapabilities() & RTC_CAP_1HZ) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_1HZ) == 0) {
       unsupported();
       break;
      }
-    RTC.enable1Hz();
+    rtc.enable1Hz();
     Serial.println(F("1 Hz signal enabled"));
     break;
   case '3':
-    if ((RTC.getCapabilities() & RTC_CAP_32KHZ) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_32KHZ) == 0) {
       unsupported();
       break;
     }
-    RTC.enable32kHz();
+    rtc.enable32kHz();
     Serial.println(F("32 kHz signal enabled"));
     break;
   case '0':
-    RTC.disable1Hz();
-    RTC.disable32kHz();
+    rtc.disable1Hz();
+    rtc.disable32kHz();
     Serial.println(F("All square wave signals disabled"));
     break;
   case 'i':
@@ -111,64 +112,94 @@ void loop() {
     Serial.println(digitalRead(PINALARM));
     break;
   case 'h':
-    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
-    RTC.getTime(tm);
-    RTC.setAlarm(tm.Minute,(tm.Hour+1)%24);
-    RTC.enableAlarm();
+    rtc.getTime(tm);
+    rtc.setAlarm(tm.Minute,(tm.Hour+1)%24);
+    rtc.enableAlarm();
     Serial.print(F("Alarm set to hour/minute "));
     Serial.print((tm.Hour+1)%24);
     Serial.print(':');
     Serial.println(tm.Minute);
     break;
   case 'n':
-    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
-    RTC.disableAlarm();
+    rtc.disableAlarm();
     break;
   case 'a':
-    if ((RTC.getCapabilities() & RTC_CAP_ALARM) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_ALARM) == 0) {
       unsupported();
       break;
     }
-    alarm = RTC.senseAlarm();
+    alarm = rtc.senseAlarm();
     Serial.print(F("Alarm: "));
     Serial.println(alarm);
     if (alarm) {
-      RTC.clearAlarm();
-      RTC.disableAlarm();
+      rtc.clearAlarm();
+      rtc.disableAlarm();
     }
     break;
   case 't':
-    if ((RTC.getCapabilities() & RTC_CAP_TEMP) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_TEMP) == 0) {
       unsupported();
       break;
     }
-    temp = RTC.getTemp();
+    temp = rtc.getTemp();
     Serial.print(F("Temp: "));
     Serial.println(temp);
     break;
   case 'o':
-    if ((RTC.getCapabilities() & RTC_CAP_OFFSET) == 0) {
+    if ((rtc.getCapabilities() & RTC_CAP_OFFSET) == 0) {
       unsupported();
       break;
     }
     offset = Serial.parseInt();
-    RTC.setOffset(offset);
+    rtc.setOffset(offset);
     Serial.print(F("Offset reg: "));
     Serial.println(offset);
     break;
   case 'r':
-    reg = Serial.parseInt();
+    reg = parse2Hex();
+    if (reg < 0) {
+      Serial.println(F("2 digit hex number expected"));
+      while (Serial.available()) Serial.read();
+      break;
+    }
     Serial.print(F("Register 0x"));
     Serial.print(reg,HEX);
     Serial.print(F("="));
-    if (RTC.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
-    Serial.println(RTC.getRegister(reg),BIN);
+    if (rtc.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
+    Serial.print(rtc.getRegister(reg),BIN);
+    Serial.print(F(" (0x"));
+    Serial.print(rtc.getRegister(reg),HEX);
+    Serial.println(F(")"));
+    break;
+  case 'R':
+    reg=parse2Hex();
+    if (reg < 0) {
+      Serial.println(F("2 digit hex number expected"));
+      while (Serial.available()) Serial.read();
+      break;
+    }
+    while (!Serial.available());
+    if (Serial.read() != '=') {
+      Serial.println(F("= expected"));
+      while (Serial.available()) Serial.read();
+      break;
+    }
+    val=parse2Hex();
+    if (val < 0) {
+      Serial.println(F("2 digit hex number expected"));
+      while (Serial.available()) Serial.read();
+      break;
+    }
+    rtc.setRegister(reg,val);
+    Serial.println(F("Register set"));
     break;
   default:
     Serial.println(F("Unknown command '"));
@@ -199,7 +230,8 @@ void help() {
 		   "  n      - disable alarm\n\r"
 		   "  o<num> - set offset register\n\r"
 		   "  t      - read out temperature\n\r"
-		   "  r<num> - show register <num> contents\n\r"));
+		   "  rXX    - show register with hex address XX\n\r"
+                   "  RXX=YY - set register XX with hex YY"));
 }
 
 void initRTC(void)  {
@@ -208,19 +240,19 @@ void initRTC(void)  {
   bool config=false;
   bool valid=false;
   
-  RTC.init(1); // select level switch-over mode
+  rtc.init(1); // select level switch-over mode
   if (getDate(__DATE__,tm) && getTime(__TIME__,tm)) {
     parse = true;
-    RTC.setTime(tm);
-    RTC.getTime(newtm);
+    rtc.setTime(tm);
+    rtc.getTime(newtm);
     //Serial.println(makeTime(tm));
     //Serial.println(makeTime(newtm));
-    valid = RTC.isValid();
+    valid = rtc.isValid();
     if (valid && makeTime(tm) == makeTime(newtm)) {
       config = true;
     }
   }
-  //Serial.println(RTC.isValid());
+  //Serial.println(rtc.isValid());
   if (parse && config) {
     Serial.print("RTC configured Time=");
     Serial.print(__TIME__);
@@ -242,6 +274,25 @@ void initRTC(void)  {
   }
 }
 
+int parse2Hex(void) {
+  char c;
+  int res = 0;
+  while (!Serial.available());
+  c = Serial.read();
+  res = checkHex(c);
+  if (res < 0) return res;
+  while (!Serial.available());
+  c = Serial.read();
+  res = checkHex(c) | (res << 4);
+  return res;
+}
+
+int checkHex(char c) {
+  if (c >= '0' && c <= '9') return c - '0';
+  else if (toupper(c) >= 'A' && toupper(c) <= 'F') return toupper(c) - 'A' + 10;
+  else return -1;
+}
+  
 
 void print2digits(int number) {
   if (number >= 0 && number < 10) {
@@ -279,7 +330,7 @@ bool getDate(const char *str, tmElements_t &tm)
 }
 
 void showTime(tmElements_t tm) {
-  RTC.getTime(tm);
+  rtc.getTime(tm);
   print2digits(tm.Hour);
   Serial.write(':');
   print2digits(tm.Minute);
