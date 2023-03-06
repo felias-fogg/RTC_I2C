@@ -60,8 +60,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
+      - name: Checkout custom library
+        uses: actions/checkout@master
+        with:
+         repository: PaulStoffregen/Time
+         ref: master
+         path: CustomLibrary
+
       - name: Compile all examples
         uses: ArminJo/arduino-test-compile@master
         with:
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
-          required-libraries: ${{ toJson(matrix.required-libraries) }}
