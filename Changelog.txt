@@ -63,3 +63,10 @@ V0.3.2 (4.3.2023)
 V0.4.0 (5.3.2023)
 - added mode=2 for setOffset in order to store the offset value in the
   native format
+
+V0.4.1 (6.3.2023)
+- fixed in testall: register number when 'setting' must also be
+  massaged when RTC_CAP_SREGADDR.
+- added also OFFSET constants for all RTCs that do not have any
+- added some explanations read.md about that and about the new example
+  iterate.ino

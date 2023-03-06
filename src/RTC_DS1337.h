@@ -11,6 +11,7 @@
 #define DS1337_ALARM1 0x07 // start of alarm 1 register (seconds)
 #define DS1337_CONTROL 0x0E // Control register
 #define DS1337_STATUS  0x0F // Status register
+#define DS1337_OFFSET 0xFF       // no offset register
 #define DS1337_WDAYBASE 1    // wday range from 1 to 7
 #define DS1337_WDAYFIRST true //  wday comes before day of month in clock reg
 #define DS1337_BIT7   0

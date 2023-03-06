@@ -57,9 +57,11 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | `clearAlarm`   | none                                            | Clears alarm flag. |
 | `setOffset`    | `int` value for 0.01 ppm correction steps and one optional `byte` mode parameter | Note that not all RTCs support trimming and they have different step sizes, ranging from 0.1 ppm to 4.3 ppm. The function will try to approximate the passed value as much as possible. Only DS1307, DS1337, and PCF8563 do not have an offset register. PCF8523 and RV-8523 offer different modes (default mode is 1). With mode 2, one can set the offset register in the RTC native representation. |
 | `getTemp` | none | Returns temperature as an integer value, if the RTC has a user accessible temperature sensor. |
-| `getRegister`  | `byte` register address                       | Returns contents of RTC register.                            |
-| `setRegister`  | `byte` register address, `byte` value | Sets RTC register to value.                                                          |
+| `getRegister` | `byte` register address<sup>1)</sup>          | Returns contents of RTC register.                            |
+| `setRegister` | `byte` register address<sup>1)</sup>, `byte` value | Sets RTC register to value.                                                          |
 | `getCapabilities` | none | Returns a byte with capability bits: Bit 0 = can output 32kHz signal, bit 1 = can output 1 Hz signal, bit 2 = has alarm, bit 3 = has offset register, 4 = has temperature sensor, 5 = uses strange register addressing scheme |
+
+<sup>1)</sup> In most cases, the register addresses correspond to the numbers in the data sheet of the respective RTC. **RS5C372** is an exception. Here the register numbers from the data sheet have to multiplied by 16 because the register addresses are expected in the high nibble. In the `testall.ino` example sketch this has been taken care of already.
 
 ## Caveats
 
@@ -73,9 +75,11 @@ Finally, it should be pointed out that this library seems to be more memory hung
 
 There are the following example sketches:
 
-`simple.ino`: Simple test sketch for setting and getting time. 
+`simple.ino`: Simple test sketch for setting and getting time. Change include file and class declaration.
 
-`testall.ino`: Interactive sketch that can be used to test all functions of an RTC. Simply change include file and class name. If you want to monitor the outputs (SQW, INT), you also need to define the constants `PIN1HZ`, `PIN32KHZ` and `PINALARM`. Which outputs to use can be seen in the next section.
+`testall.ino`: Interactive sketch that can be used to test all functions of an RTC that are supported by their library. Simply change include file and class name. If you want to monitor the outputs (SQW, INT), you also need to define the constants `PIN1HZ`, `PIN32KHZ` and `PINALARM`. Which outputs to use can be seen in the next section.
+
+`iterate.ino`: It defines an array of RTCs that can all be treated in the same way. This is demonstrated by iterating over them and printing out the time from each RTC. The current version is not executable because of I2C address clashes. In order to make that executable, you need also two I2C multiplexer that would need to be integrated into the code. 
 
 ## RTC capabilities
 
@@ -90,7 +94,7 @@ The following table lists all the capabilities for each RTC. For the frequency o
 | MCP79410   | `MFP`<sup>2)</sup>                 | `MFP`                 | `MFP`<sup>5)</sup>  |            ≈1 |           |       0.4 |
 | PCF8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |           |       1.0 |
 | PCF8563    | `CLKOUT`                           | `CLKOUT`              | `nINT`              |               |           |       0.4 |
-| RS5C372    | `nINTRA`<sup>2)</sup>              | `nINTRB`              | `nINTRB`            |         3.051 |           |       0.4 |
+| RS5C372    | `nINTRB`<sup>2)</sup>              | `nINTRB`              | `nINTRA`            |         3.051 |           |       0.4 |
 | RV-3028    | `nINT`<sup>1)</sup>                | `CLKOUT`              | `nINT`<sup>4)</sup> |        0.9537 |           |       0.4 |
 | RV-3032    | `CLKOUT`<sup>1)</sup>              | `CLKOUT`              | `nINT`              |        0.2384 |        ±3 |       0.4 |
 | RV-8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |           |       1.0 |

@@ -1,7 +1,7 @@
 #include <RTC_RS5C372.h>
 
 void RS5C372::init(__attribute__ ((unused)) byte mode) {
-  setRegister(RS5C372_CONTROL1, 0b00100000); // INT and 32K to INTRB output
+  setRegister(RS5C372_CONTROL1, 0b00100000); // INT(1Hz) and 32K to INTRB output, Alarm_A and Alarm_B to INTRA
   setRegister(RS5C372_CONTROL2, 0b00101000); // 24h format and 32K output disabled
   setRegister(RS5C372_OFFSET, 0); // 32.768 crystal and no trimming
 }

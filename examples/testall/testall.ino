@@ -1,14 +1,14 @@
 // Simple test for RTC_I2C
 // Just include one RTC class and try out all implemeted methods
 
-#include <RTC_RV3028.h>
+#include <RTC_RS5C372.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 2
-#define PINALARM 2
+#define PINALARM 3
 
-RV3028 rtc;
+RS5C372 rtc;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -198,6 +198,7 @@ void loop() {
       while (Serial.available()) Serial.read();
       break;
     }
+    if (rtc.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
     rtc.setRegister(reg,val);
     Serial.println(F("Register set"));
     break;

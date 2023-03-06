@@ -8,6 +8,7 @@
 #define DS1307_ADDRESS  0x68     // I2C address for DS1307
 #define DS1307_CONTROL  0x07     // Control register
 #define DS1307_CLOCKREG 0x00     // Clock register
+#define DS1307_OFFSET 0xFF       // no offset register
 #define DS1307_WDAYBASE 1        // wday range from 1 to 7
 #define DS1307_WDAYFIRST true    // wday comes before day of month in clock reg
 #define DS1307_BIT7     0        // no 7th bit needs to be set

@@ -10,6 +10,7 @@
 #define PCF8563_CLOCKREG 0x02 // Clock register
 #define PCF8563_CONTROL 0x00 // Control register
 #define PCF8563_CLKOUT  0x0D // Clock out control (and timer)
+#define PCF8563_OFFSET  0xFF // no offset reg
 #define PCF8563_WDAYBASE 0    // wday range from 0 to 6
 #define PCF8563_WDAYFIRST false    // wday comes after day of month in clock reg
 #define PCF8563_BIT7 0
