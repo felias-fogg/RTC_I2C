@@ -45,13 +45,13 @@ jobs:
         #############################################################################################################
         include:
           - arduino-boards-fqbn: arduino:avr:uno
-            required-libraries: TimeLib
+            required-libraries: Time
 
           - arduino-boards-fqbn: arduino:avr:leonardo
-            required-libraries: TimeLib
+            required-libraries: Time
 
           - arduino-boards-fqbn: arduino:avr:mega
-            required-libraries: TimeLib
+            required-libraries: Time
 
       # Do not cancel all jobs / architectures if one job fails
       fail-fast: false
