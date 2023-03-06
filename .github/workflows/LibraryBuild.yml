@@ -64,5 +64,4 @@ jobs:
         uses: ArminJo/arduino-test-compile@master
         with:
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
-          build-properties: ${{ toJson(matrix.build-properties) }}
-          required-libraries: ${{ toJson(matrix.rquired-libraries) }}
+          required-libraries: ${{ toJson(matrix.required-libraries) }}
