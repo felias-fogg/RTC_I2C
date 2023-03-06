@@ -54,6 +54,8 @@ jobs:
       - name: Compile all examples
         uses: ArminJo/arduino-test-compile@master
         with:
+	  required-libraries: TimeLib
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
           platform-url: ${{ matrix.platform-url }}
-	  required-libraries: TimeLib
+          build-properties: ${{ toJson(matrix.build-properties) }}
+
