@@ -81,24 +81,24 @@ byte RTC::decodewday(byte bits) {
     
 // set one RTC register
 void RTC::setRegister(byte reg, byte val) {
-  Serial.print(F("setReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b")); Serial.println(val,BIN);
+  //Serial.print(F("setReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b")); Serial.println(val,BIN);
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
   _wire->write(val);
   _wire->endTransmission();
-  Serial.println(F("Verify:")); Serial.println(getRegister(reg),BIN);
+  //Serial.println(F("Verify:")); Serial.println(getRegister(reg),BIN);
 }
 
 // get one RTC register
 byte RTC::getRegister(byte reg) {
   byte res;
-  Serial.print(F("getReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b"));
+  //Serial.print(F("getReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b"));
   _wire->beginTransmission(_i2caddr);
   _wire->write(reg);
   if (_wire->endTransmission(false) != 0) return 0xFF;
   if (_wire->requestFrom(_i2caddr, (byte)1) != 1) return 0xFF;
   res= _wire->read();
-  Serial.println(res,BIN);
+  //Serial.println(res,BIN);
   return res;
 }
 
