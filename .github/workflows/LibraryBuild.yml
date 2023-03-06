@@ -56,6 +56,4 @@ jobs:
         with:
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
           platform-url: ${{ matrix.platform-url }}
-          build-properties: ${{ toJson(matrix.build-properties) }}
 	  required-libraries: TimeLib
-
