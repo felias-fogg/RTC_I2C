@@ -51,13 +51,17 @@ void PCF8523::disable1Hz(void) {
 // in mode 1 (correction every minute), 1 LSB is roughly 4.06 ppm.
 // The range goes from -64 to +63. 
 void PCF8523::setOffset(int offset, byte mode) {
-  if (mode == 0) 
-    offset = (offset + (offset > 0 ? +217 : -217))/434;
-  else
-    offset = (offset + (offset > 0 ? +203 : -203))/406;
-  if (offset < -64) offset = -64;
-  else if (offset > 63) offset = 63;
-  Serial.println(offset);
-  Serial.println(((offset&0x7F)|(mode<<7)));
-  setRegister(PCF8523_OFFSET, ((offset&0x7F)|(mode<<7)));
+  if (mode == 2) 
+    setRegister(PCF8523_OFFSET, (offset&0xFF));
+  else {
+    if (mode == 0) 
+      offset = (offset + (offset > 0 ? +217 : -217))/434;
+    else
+      offset = (offset + (offset > 0 ? +203 : -203))/406;
+    if (offset < -64) offset = -64;
+    else if (offset > 63) offset = 63;
+    //Serial.println(offset);
+    //Serial.println(((offset&0x7F)|(mode<<7)));
+    setRegister(PCF8523_OFFSET, ((offset&0x7F)|(mode<<7)));
+  }
 }

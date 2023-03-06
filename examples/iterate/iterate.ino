@@ -4,6 +4,7 @@
 #include <RTC_DS1307.h>
 #include <RTC_DS1337.h>
 #include <RTC_DS3231.h>
+#include <RTC_MCP79410.h>
 #include <RTC_PCF8523.h>
 #include <RTC_PCF8563.h>
 #include <RTC_RS5C372.h>
@@ -12,22 +13,25 @@
 #include <RTC_RV3032.h>
 #include <RTC_RV8523.h>
 #include <RTC_RV8803.h>
+#include <RTC_SD2405.h>
 
-#define MAXRTC 11
+#define MAXRTC 13
 
 DS1307 rtc0;
 DS1337 rtc1;
 DS3231 rtc2;
-PCF8523 rtc3;
-PCF8563 rtc4;
-RS5C372 rtc5;
-RV3028 rtc6;
-RV3028U rtc7;
-RV3032 rtc8;
-RV8523 rtc9;
-RV8803 rtc10;
+MCP79410 rtc3;
+PCF8523 rtc4;
+PCF8563 rtc5;
+RS5C372 rtc6;
+RV3028 rtc7;
+RV3028U rtc8;
+RV3032 rtc9;
+RV8523 rtc10;
+RV8803 rtc11;
+SD2405 rtc12;
 
-RTC *rtc[MAXRTC] = { &rtc0, &rtc1, &rtc2, &rtc3, &rtc4, &rtc5, &rtc6, &rtc7, &rtc8, &rtc9, &rtc10 };
+RTC *rtc[MAXRTC] = { &rtc0, &rtc1, &rtc2, &rtc3, &rtc4, &rtc5, &rtc6, &rtc7, &rtc8, &rtc9, &rtc10, &rtc11, &rtc12};
 
 
 void setup(void) {

@@ -47,7 +47,7 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | `disableAlarm` | none                                            | Disables alarm.                                              |
 | `senseAlarm`   | none                                            | Returns `true`if alarm has been raised. |
 | `clearAlarm`   | none                                            | Clears alarm flag. |
-| `setOffset`    | `int` value for 0.01 ppm correction steps and one optional `byte` mode parameter | Note that not all RTCs support trimming and they have different step sizes, ranging from 0.1 ppm to 4.3 ppm. The function will try to approximate the passed value as much as possible. Only DS1307, DS1337, and PCF8563 do not have an offset register. PCF8523 and RV-8523 offer different modes. |
+| `setOffset`    | `int` value for 0.01 ppm correction steps and one optional `byte` mode parameter | Note that not all RTCs support trimming and they have different step sizes, ranging from 0.1 ppm to 4.3 ppm. The function will try to approximate the passed value as much as possible. Only DS1307, DS1337, and PCF8563 do not have an offset register. PCF8523 and RV-8523 offer different modes (default mode is 1). With mode 2, one can set the offset register in the RTC native representation. |
 | `getTemp` | none | Returns temperature as an integer value, if the RTC has a user accessible temperature sensor. |
 | `getRegister`  | `byte` register address                       | Returns contents of RTC register.                            |
 | `setRegister`  | `byte` register address, `byte` value | Sets RTC register to value.                                                          |
@@ -73,25 +73,25 @@ There are the following example sketches:
 
 The following table lists all the capabilities for each RTC. For the frequency outputs and alarms, it also states at which pins the signal can be sensed. For the offset register, the step size is mentioned. And for the temperature, the accuracy is stated. Any empty entry means that the RTC does not posses this capability. Finally in the last column, we specify the maximal I2C frequency in MHz.
 
-| RTC        | 1 Hz                               | 32 kHz                | Alarm               |  Offset (ppm) | Temp (° C) | I2C (MHz) |
-| ---------- | ---------------------------------- | --------------------- | ------------------- | ------------: | ---------: | --------: |
-| DS1307     | `SQW/OUT`                          | `SQW/OUT`             |                     |               |            |       0.1 |
-| DS1337     | `SQW/nINTB`                        | `SQW/nINTB`           | `SQW/nINTB`         |               |            |       0.4 |
-| DS3231S(N) | `nINT/SQW`<sup>1)</sup>            | `32kHz`<sup>1)</sup>  | `nINT/SQW`          |          ≈0.1 |         ±3 |       0.4 |
-| DS3231M    | `nINT/SQW`<sup>1)</sup>            | `32kHz`               | `nINT/SQW`          |          ≈0.1 |         ±3 |       0.4 |
-| MCP79410   | `MFP`<sup>2)</sup>                 | `MFP`                 | `MFP`<sup>5)</sup>  |            ≈1 |            |       0.4 |
-| PCF8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |            |       1.0 |
-| PCF8563    | `CLKOUT`                           | `CLKOUT`              | `nINT`              |               |            |       0.4 |
-| RS5C372    | `nINTRA`<sup>2)</sup>              | `nINTRB`              | `nINTRB`            |         3.051 |            |       0.4 |
-| RV-3028    | `nINT`<sup>1)</sup>                | `CLKOUT`              | `nINT`<sup>4)</sup> |        0.9537 |            |       0.4 |
-| RV-3032    | `CLKOUT`<sup>1)</sup>              | `CLKOUT`              | `nINT`              |        0.2384 |         ±3 |       0.4 |
-| RV-8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |            |       1.0 |
-| RV-8803    | `CLKOUT`<sup>1)</sup><sup>3)</sup> | `CLKOUT`<sup>3)</sup> | `nINT`              |        0.2384 |            |       0.4 |
-| SD2405     | `nINT`                             | `nINT`                | `nINT`              |         3.051 |            |       0.4 |
+| RTC        | 1 Hz                               | 32 kHz                | Alarm               |  Offset (ppm) | Temp (°C) | I2C (MHz) |
+| ---------- | ---------------------------------- | --------------------- | ------------------- | ------------: | --------: | --------: |
+| DS1307     | `SQW/OUT`                          | `SQW/OUT`             |                     |               |           |       0.1 |
+| DS1337     | `SQW/nINTB`                        | `SQW/nINTB`           | `SQW/nINTB`         |               |           |       0.4 |
+| DS3231S(N) | `nINT/SQW`<sup>1)</sup>            | `32kHz`<sup>1)</sup>  | `nINT/SQW`          |          ≈0.1 |        ±3 |       0.4 |
+| DS3231M    | `nINT/SQW`<sup>1)</sup>            | `32kHz`               | `nINT/SQW`          |          ≈0.1 |        ±3 |       0.4 |
+| MCP79410   | `MFP`<sup>2)</sup>                 | `MFP`                 | `MFP`<sup>5)</sup>  |            ≈1 |           |       0.4 |
+| PCF8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |           |       1.0 |
+| PCF8563    | `CLKOUT`                           | `CLKOUT`              | `nINT`              |               |           |       0.4 |
+| RS5C372    | `nINTRA`<sup>2)</sup>              | `nINTRB`              | `nINTRB`            |         3.051 |           |       0.4 |
+| RV-3028    | `nINT`<sup>1)</sup>                | `CLKOUT`              | `nINT`<sup>4)</sup> |        0.9537 |           |       0.4 |
+| RV-3032    | `CLKOUT`<sup>1)</sup>              | `CLKOUT`              | `nINT`              |        0.2384 |        ±3 |       0.4 |
+| RV-8523    | `nINT1/CLKOUT`                     | `nINT1/CLKOUT`        | `nINT1/CLKOUT`      | 4.34 or 4.069 |           |       1.0 |
+| RV-8803    | `CLKOUT`<sup>1)</sup><sup>3)</sup> | `CLKOUT`<sup>3)</sup> | `nINT`              |        0.2384 |           |       0.4 |
+| SD2405     | `nINT`                             | `nINT`                | `nINT`              |         3.051 |           |       0.4 |
 
 <sup>1)</sup> The offset register influences the frequency directly.
 
-<sup>2)</sup> The offset register influences the frequency. However, the adjustments are made every 10 or 20 seconds. This means one would need a large set of measurements when one wants to to get the true average frequency.
+<sup>2)</sup> The offset register influences the frequency. However, the adjustments are made every 10, 20, or 60 seconds. This means one would need a large set of measurements when one wants to to get the true average frequency.
 
 <sup>3)</sup> The output cannot be disabled using software, but one has to pull-down the `CLKOE` pin. On the Sparkfun breakout board, this input is pulled to GND by a 100 kΩ resistor, i.e., one has to tie it to Vcc in order to enable CLKOUT. 
 

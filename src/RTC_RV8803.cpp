@@ -83,14 +83,16 @@ void RV8803::enable1Hz(void) {
 // negative values make the clock faster by 0.2384 ppm/LSB
 // The range of the internal parameter goes from -32 to +31.
 // This means that possible values for offset range from -768 to +744 corresponding to -7.68 ppm to 7.44 ppm 
-void RV8803::setOffset(int offset, __attribute__ ((unused)) byte mode) {
-  if (offset < 0) offset = offset - 12;
-  else offset = offset + 12;
-  offset = offset/24;
-  if (offset < -32) offset = -32;
-  else if (offset > 31) offset = 31;
-  Serial.println(offset);
-  Serial.println(offset&0x3F);
+void RV8803::setOffset(int offset, byte mode) {
+  if (mode != 2) {
+    if (offset < 0) offset = offset - 12;
+    else offset = offset + 12;
+    offset = offset/24;
+    if (offset < -32) offset = -32;
+    else if (offset > 31) offset = 31;
+  }
+  //Serial.println(offset);
+  //Serial.println(offset&0x3F);
   setRegister(RV8803_OFFSET, (offset&0x3F));
 }
 

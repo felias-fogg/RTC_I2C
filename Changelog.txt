@@ -59,3 +59,7 @@ V0.3.2 (4.3.2023)
 - added possible extra '1' bits in clock register for some RTCs by new
   var _bit7set
 - moved constructor into header file
+
+V0.4.0 (5.3.2023)
+- added mode=2 for setOffset in order to store the offset value in the
+  native format

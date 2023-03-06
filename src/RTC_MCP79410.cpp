@@ -1,6 +1,6 @@
 #include <RTC_MCP79410.h>
 
-void MCP79410::init(byte mode) {
+void MCP79410::init( __attribute__ ((unused)) byte mode) {
   setRegister(MCP79410_CONTROL, 0x80);
 }
 
@@ -65,21 +65,25 @@ void MCP79410::disable1Hz(void) {
 
 // negative values make the clock faster by roughly 1 ppm/LSB in mode 0.
 // The range of the internal parameter goes from -128 to +127, but they use
-// appafrently sign + magnitude instead of 2ers complement.
+// apparently sign + magnitude instead of 2ers complement.
 // I do not support the coarse claibration, because it will screw up
 // the SQW output and is too coarse anyways.
-void MCP79410::setOffset(int offset, __attribute__ ((unused)) byte mode) {
+void MCP79410::setOffset(int offset, byte mode) {
   bool sign = false;
-  if (offset < 0) {
-    sign = true;
-    offset = -offset;
+  if (mode == 2) {
+    setRegister(MCP79410_OFFSET, offset&0xFF);
+  } else {
+    if (offset < 0) {
+      sign = true;
+      offset = -offset;
+    }
+    offset = (offset+50)/100;
+    if (offset < -127) offset = -127;
+    else if (offset > 127) offset = 127;
+    //Serial.println(sign);
+    //Serial.println(offset);
+    setRegister(MCP79410_OFFSET, (sign<<7)|offset);
   }
-  offset = (offset+50)/100;
-  if (offset < -127) offset = -127;
-  else if (offset > 127) offset = 127;
-  Serial.println(sign);
-  Serial.println(offset);
-  setRegister(MCP79410_OFFSET, (sign<<7)|offset);
   setRegister(MCP79410_CONTROL, getRegister(MCP79410_CONTROL) & 0b11111011); // clear RS2
 }
 
