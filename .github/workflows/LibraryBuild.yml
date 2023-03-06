@@ -40,15 +40,15 @@ jobs:
           - arduino:avr:leonardo
           - arduino:avr:mega
 
-	include:
- 	- arduino-boards-fqbn: arduino:avr:uno
-          required-libraries: TimeLib
+        include:
+          - arduino-boards-fqbn: arduino:avr:uno
+            required-libraries: TimeLib
 
-	- arduino-boards-fqbn: arduino:avr:leonardo
-          required-libraries: TimeLib
+          - arduino-boards-fqbn: arduino:avr:leonardo
+            required-libraries: TimeLib
 
-	- arduino-boards-fqbn: arduino:avr:mega
-          required-libraries: TimeLib
+         - arduino-boards-fqbn: arduino:avr:mega
+           required-libraries: TimeLib
 
 
         # Choose the right platform for the boards we want to test. (maybe in the future Arduino will automatically do this for you)
@@ -65,7 +65,7 @@ jobs:
       - name: Compile all examples
         uses: ArminJo/arduino-test-compile@master
         with:
-	  required-libraries: ${{ matrix.required-libraries }}
+          required-libraries: ${{ matrix.required-libraries }}
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
           platform-url: ${{ matrix.platform-url }}
           build-properties: ${{ toJson(matrix.build-properties) }}
