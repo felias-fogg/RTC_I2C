@@ -1,5 +1,13 @@
 # RTC_I2C
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[![Commits since latest](https://img.shields.io/github/commits-since/felias-fogg/RTC_I2C/latest)](https://github.com/felias-fogg/Vcc/commits/master)
+
+![Hit Counter](https://visitor-badge.laobi.icu/badge?page_id=felias-fogg_RTC_I2C)
+
+[![Build Status](https://github.com/felias-fogg/RTC_I2C/workflows/LibraryBuild/badge.svg)](https://github.com/felias-fogg/RTC_I2C/actions)
+
 
 
 ## A universal API for I2C RTCs
