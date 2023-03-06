@@ -34,6 +34,7 @@ jobs:
         # STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
         # esp8266:esp8266:huzzah:eesz=4M3M,xtal=80, esp32:esp32:featheresp32:FlashFreq=80
         # You may add a suffix behind the fqbn with "|" to specify one board for e.g. different compile options like arduino:avr:uno|trace
+        #############################################################################################################
         arduino-boards-fqbn:
           - arduino:avr:uno
           - arduino:avr:leonardo
