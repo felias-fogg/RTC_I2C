@@ -1,5 +1,5 @@
 {
-    "version": "0.4.1",
+    "version": "0.5.0",
     "name": "RTC_I2C",
     "keywords": "I2C, RTC, time",
     "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803, RV-3032, RV-3028, MCP79140, SD2405",
