@@ -16,6 +16,11 @@ void SD2405::setAlarm(byte minute, byte hour) {
   setRegister(SD2405_ALARM+7, 0b110); // hours and minute need to match
 }
 
+void SD2405::setAlarm(byte minute) {
+  setRegister(SD2405_ALARM+1, bin2bcd(minute)); // set second alarm
+  setRegister(SD2405_ALARM+7, 0b010); // minute needs to match
+}
+
 
 void SD2405::enableAlarm(void) { 
   byte ctr = getRegister(SD2405_CONTROL+1);

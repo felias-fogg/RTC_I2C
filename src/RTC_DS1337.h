@@ -15,7 +15,7 @@
 #define DS1337_WDAYBASE 1    // wday range from 1 to 7
 #define DS1337_WDAYFIRST true //  wday comes before day of month in clock reg
 #define DS1337_BIT7   0
-#define DS1337_CAP    (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM)
+#define DS1337_CAP    (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM)
 
 
 class DS1337: public DSAlarm {

@@ -49,6 +49,13 @@ void RV8803::setAlarm(byte minute, byte hour) {
   setRegister(RV8803_ALARM+3, 0x80); // set day alarm to always
 }
 
+void RV8803::setAlarm(byte minute) {
+  setRegister(RV8803_ALARM, bin2bcd(minute)); // set minute alarm
+  setRegister(RV8803_ALARM+1, 0x80); // set hour alarm to always
+  setRegister(RV8803_ALARM+2, 0x80); // set weekday alarm to always
+  setRegister(RV8803_ALARM+3, 0x80); // set day alarm to always
+}
+
 
 void RV8803::enableAlarm(void) { 
   byte ctr = getRegister(RV8803_CONTROL);

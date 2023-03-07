@@ -21,6 +21,12 @@ void RV3028::setAlarm(byte minute, byte hour) {
   setRegister(RV3028_ALARM+2, 0x80); // set weekday/day alarm to always
 }
 
+void RV3028::setAlarm(byte minute) {
+  setRegister(RV3028_ALARM, bin2bcd(minute)); // set minute alarm
+  setRegister(RV3028_ALARM+1, 0x80); // set hour alarm to always
+  setRegister(RV3028_ALARM+2, 0x80); // set weekday/day alarm to always
+}
+
 
 void RV3028::enableAlarm(void) { 
   byte ctr = getRegister(RV3028_CONTROL+1);

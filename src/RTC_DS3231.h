@@ -16,7 +16,7 @@
 #define DS3231_WDAYBASE 1    // wday range from 1 to 7
 #define DS3231_WDAYFIRST true    // wday comes before day of month in clock reg
 #define DS3231_BIT7  0
-#define DS3231_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
+#define DS3231_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
 
 
 class DS3231: public DSAlarm {

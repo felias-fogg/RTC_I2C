@@ -15,7 +15,7 @@
 #define SD2405_WDAYBASE 0    // wday range from 0 to 6
 #define SD2405_WDAYFIRST true  // wday comes before day of month in clock reg
 #define SD2405_BIT7 (1<<2)      // The 24H flag!
-#define SD2405_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
+#define SD2405_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM|RTC_CAP_OFFSET)
 
 
 class SD2405: public RTC {
@@ -31,6 +31,7 @@ class SD2405: public RTC {
   void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour); // here we can only set the alarm til next match
+  void setAlarm(byte minute); // hourly alarm at a particular minute
   bool senseAlarm(void);
   void clearAlarm(void);
   void enableAlarm(void);

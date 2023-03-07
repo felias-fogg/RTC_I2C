@@ -40,6 +40,7 @@ class RTC {
   virtual void enable1Hz(void) { };
   virtual void disable1Hz(void) { };
   virtual void setAlarm(__attribute__ ((unused)) byte minute, __attribute__ ((unused)) byte hour) {  };
+  virtual void setAlarm(__attribute__ ((unused)) byte minute) {  };
   virtual void enableAlarm(void) { };
   virtual void disableAlarm(void) { };
   virtual bool senseAlarm(void) { return false; };
@@ -67,6 +68,7 @@ class RTC {
 class DSAlarm : public RTC {
  public:
   void setAlarm(byte minute, byte hour);
+  void setAlarm(byte minute);
   void enableAlarm(void);
   void disableAlarm(void);
   bool senseAlarm(void);
@@ -76,6 +78,7 @@ class DSAlarm : public RTC {
 class PCFAlarm : public RTC {
  public:
   void setAlarm(byte minute, byte hour);
+  void setAlarm(byte minute);
   bool senseAlarm(void);
   void clearAlarm(void);
 };

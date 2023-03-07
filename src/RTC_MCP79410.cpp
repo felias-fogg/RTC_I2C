@@ -17,14 +17,18 @@ void MCP79410::setAlarm(byte minute, byte hour) {
     breakTime(t, tm);
   }
   setRegister(MCP79410_ALARM, bin2bcd(0)); // set second alarm
-  setRegister(MCP79410_ALARM+1, bin2bcd(minute)); // set second alarm
+  setRegister(MCP79410_ALARM+1, bin2bcd(minute)); // set minute alarm
   setRegister(MCP79410_ALARM+2, bin2bcd(hour)); // set hour alarm
   setRegister(MCP79410_ALARM+3, 0x70 | bin2bcd(tm.Wday)); // set weekday alarm and set match condition
   setRegister(MCP79410_ALARM+4, bin2bcd(tm.Day)); // set day of month
   setRegister(MCP79410_ALARM+5, bin2bcd(tm.Month)); // set day of month
 }
 
-
+void MCP79410::setAlarm(byte minute) {
+  setRegister(MCP79410_ALARM+1, bin2bcd(minute)); // set minute alarm
+  setRegister(MCP79410_ALARM+3, 0x10); // set match condition to minutes must match
+}
+  
 void MCP79410::enableAlarm(void) { 
   byte ctr = getRegister(MCP79410_CONTROL);
   setRegister(MCP79410_CONTROL, ctr | 0b10000); // set the ALM0 bit

@@ -18,7 +18,7 @@
 #define PCF8523_WDAYBASE 0    // wday range from 0 to 6
 #define PCF8523_WDAYFIRST false    // wday comes after day of month in clock reg
 #define PCF8523_BIT7  0
-#define PCF8523_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
+#define PCF8523_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM|RTC_CAP_OFFSET)
 
 
 class PCF8523: public PCFAlarm {

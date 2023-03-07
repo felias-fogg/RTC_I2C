@@ -23,7 +23,7 @@
 #define RV3032_BIT7 0
 #define RV3032_WDAYBASE 0    // wday range from 0 to 6, 
 #define RV3032_WDAYFIRST true    // wday comes after day of month in clock reg
-#define RV3032_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
+#define RV3032_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM|RTC_CAP_OFFSET|RTC_CAP_TEMP)
 
 
 class RV3032: public RTC {
@@ -39,6 +39,7 @@ class RV3032: public RTC {
   void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);
+  void setAlarm(byte minute);
   bool senseAlarm(void);
   void clearAlarm(void);
   void enableAlarm(void);

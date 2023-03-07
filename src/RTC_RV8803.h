@@ -22,7 +22,7 @@
 #define RV8803_WDAYBASE 2    // wday range from 0 to 6, but it is now the 1-bit at this bit position!
 #define RV8803_WDAYFIRST true    // wday comes after day of month in clock reg
 #define RV8803_BIT7 0
-#define RV8803_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_OFFSET)
+#define RV8803_CAP  (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM|RTC_CAP_OFFSET)
 
 
 class RV8803: public RTC {
@@ -42,6 +42,7 @@ class RV8803: public RTC {
   time_t getTime(bool blocking=false);
   void getTime(tmElements_t &tm, bool blocking=false);
   void setAlarm(byte minute, byte hour);
+  void setAlarm(byte minute);
   bool senseAlarm(void);
   void clearAlarm(void);
   void enableAlarm(void);

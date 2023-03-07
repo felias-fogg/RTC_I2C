@@ -118,6 +118,13 @@ void DSAlarm::setAlarm(byte minute, byte hour) {
   setRegister(DSALARM_ALARM1+3, 0x80); // set day alarm to always
 }
 
+void DSAlarm::setAlarm(byte minute) {
+  setRegister(DSALARM_ALARM1, 0x00); // clear seconds alarm
+  setRegister(DSALARM_ALARM1+1, bin2bcd(minute)); // set minute alarm
+  setRegister(DSALARM_ALARM1+2, 0x80); // set hour alarm to always
+  setRegister(DSALARM_ALARM1+3, 0x80); // set day alarm to always
+}
+
 void DSAlarm::enableAlarm(void) {
   byte ctr = getRegister(DSALARM_CONTROL);
   setRegister(DSALARM_CONTROL, (ctr & 0b11111110) | 0b00000001);
@@ -146,6 +153,13 @@ void DSAlarm::clearAlarm(void) {
 void PCFAlarm::setAlarm(byte minute, byte hour) {
   setRegister(_clockreg+7, bin2bcd(minute)); // set minute alarm
   setRegister(_clockreg+8, bin2bcd(hour)); // set hour alarm
+  setRegister(_clockreg+9, 0x80); // set day alarm to always
+  setRegister(_clockreg+10, 0x80); // set weekday alarm to always
+}
+
+void PCFAlarm::setAlarm(byte minute) {
+  setRegister(_clockreg+7, bin2bcd(minute)); // set minute alarm
+  setRegister(_clockreg+8, 0x80); // set hour alarm to always
   setRegister(_clockreg+9, 0x80); // set day alarm to always
   setRegister(_clockreg+10, 0x80); // set weekday alarm to always
 }

@@ -36,6 +36,7 @@ class RS5C372: public RTC {
   void init(byte mode=1);
   bool isValid(void);
   void setAlarm(byte minute, byte hour);
+  void setAlarm(__attribute__ ((unused)) byte minute) { }; // no-op for this RTC!
   void enableAlarm(void);
   void disableAlarm(void);
   bool senseAlarm(void);

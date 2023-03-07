@@ -1,14 +1,14 @@
 // Simple test for RTC_I2C
 // Just include one RTC class and try out all implemeted methods
 
-#include <RTC_RS5C372.h>
+#include <RTC_RV3028.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
-#define PIN32KHZ 2
-#define PINALARM 3
+#define PIN32KHZ 3
+#define PINALARM 2
 
-RS5C372 rtc;
+RV3028 rtc;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -62,14 +62,18 @@ void loop() {
     if (!rtc.isValid()) Serial.println(F("(Date may be invalid)"));
     break;
   case 'f': rtc.getTime(tm);
-    if (tm.Minute < 2) tm.Minute += 58;
+    if (tm.Minute < 1) tm.Minute += 59;
     else {
       if (tm.Hour++ == 23) tm.Hour = 0;
-      tm.Minute -= 2;
+      tm.Minute -= 1;
     }
     rtc.setTime(tm);
-    Serial.print(F("Time has advanced by 58 minutes: "));
+    Serial.print(F("Time has advanced by 59 minutes: "));
     showTime(tm);
+    break;
+  case 'y':
+    rtc.setTime(makeTime({45,59,23,1,28,2,2100-1970}));
+    Serial.println(F("Time has advance to 28.2.2100, 23:59:45"));
     break;
   case '1':
     if ((rtc.getCapabilities() & RTC_CAP_1HZ) == 0) {
@@ -116,12 +120,25 @@ void loop() {
       unsupported();
       break;
     }
+    rtc.disableAlarm();
     rtc.getTime(tm);
     rtc.setAlarm(tm.Minute,(tm.Hour+1)%24);
     rtc.enableAlarm();
     Serial.print(F("Alarm set to hour/minute "));
     Serial.print((tm.Hour+1)%24);
     Serial.print(':');
+    Serial.println(tm.Minute);
+    break;
+  case 'm':
+    if ((rtc.getCapabilities() & RTC_CAP_HOURLY_ALARM) == 0) {
+      unsupported();
+      break;
+    }
+    rtc.getTime(tm);
+    rtc.disableAlarm();
+    rtc.setAlarm(tm.Minute);
+    rtc.enableAlarm();
+    Serial.print(F("Alarm set to minute "));
     Serial.println(tm.Minute);
     break;
   case 'n':
@@ -141,8 +158,11 @@ void loop() {
     Serial.println(alarm);
     if (alarm) {
       rtc.clearAlarm();
-      rtc.disableAlarm();
     }
+    break;
+  case 'A':
+    rtc.disableAlarm();
+    Serial.println(F("All alarms disabled"));
     break;
   case 't':
     if ((rtc.getCapabilities() & RTC_CAP_TEMP) == 0) {
@@ -218,15 +238,18 @@ void help() {
 		   "  ?      - help\n\r"
 		   "  s      - init clock & set clock to compile time\n\r"
 		   "  c      - show time\n\r"
-		   "  f      - skip 58 minutes forward\n\r"
 		   "  d      - show date\n\r"
 		   "  1      - activate 1 Hz signal\n\r"
 		   "  3      - activate 32 kHz signal\n\r"
 		   "  0      - disable all square wave signals\r\n"
 		   "  i      - input on all possible pins and measure pule width\n\r"
 		   "  h      - set minute/hour alarm to 1h in the future\n\r"
+		   "  m      - set hourly alarm matching the current minute\n\r"
 		   "  a      - sense alarm and clear flag\n\r"
+		   "  A      - disable alarms\n\r"
 		   "  n      - disable alarm\n\r"
+		   "  f      - skip 59 minutes forward\n\r"
+		   "  y      - skip to 23:59:00 of February 28, 2100\n\r"
 		   "  o<num> - set offset register\n\r"
 		   "  t      - read out temperature\n\r"
 		   "  rXX    - show register with hex address XX\n\r"
