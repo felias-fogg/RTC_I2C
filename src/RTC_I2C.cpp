@@ -24,7 +24,7 @@ void RTC::setTime(time_t t) {
 // set time from a time record
 void RTC::setTime(tmElements_t tm) {
   _wire->beginTransmission(_i2caddr);
-  _wire->write(_clockreg);
+  _wire->write((_capabilities&RTC_CAP_SREGADDR) ? (_clockreg<<4) : _clockreg);
   _wire->write(bin2bcd(tm.Second) | ((_bit7set & 1) ? 0x80 : 0)); 
   _wire->write(bin2bcd(tm.Minute) | ((_bit7set & (1<<1)) ? 0x80 : 0));
   _wire->write(bin2bcd(tm.Hour)   | ((_bit7set & (1<<2)) ? 0x80 : 0));
@@ -53,10 +53,12 @@ void RTC::getTime(tmElements_t &tm, bool blocking) {
 
   if (blocking) {
     sec = getRegister(_clockreg);
-    while (++timeout && sec == getRegister(_clockreg)); // wait until next second is reached 
+    while (++timeout && sec ==
+	   getRegister((_capabilities&RTC_CAP_SREGADDR) ?
+		       (_clockreg<<4) : _clockreg));// wait until next second is reached 
   }  
   _wire->beginTransmission(_i2caddr);
-  _wire->write(_clockreg);
+  _wire->write((_capabilities&RTC_CAP_SREGADDR) ? (_clockreg<<4) : _clockreg);
   if (_wire->endTransmission(false) != 0) return;
   if (_wire->requestFrom(_i2caddr, (byte)7) != 7) return;
   tm.Second = bcd2bin(_wire->read() & 0x7F);
@@ -83,7 +85,7 @@ byte RTC::decodewday(byte bits) {
 void RTC::setRegister(byte reg, byte val) {
   //Serial.print(F("setReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b")); Serial.println(val,BIN);
   _wire->beginTransmission(_i2caddr);
-  _wire->write(reg);
+  _wire->write((_capabilities&RTC_CAP_SREGADDR) ? (reg<<4) : reg);
   _wire->write(val);
   _wire->endTransmission();
   //Serial.println(F("Verify:")); Serial.println(getRegister(reg),BIN);
@@ -94,7 +96,7 @@ byte RTC::getRegister(byte reg) {
   byte res;
   //Serial.print(F("getReg(0x")); Serial.print(reg,HEX); Serial.print(F(")=0b"));
   _wire->beginTransmission(_i2caddr);
-  _wire->write(reg);
+  _wire->write((_capabilities&RTC_CAP_SREGADDR) ? (reg<<4) : reg);
   if (_wire->endTransmission(false) != 0) return 0xFF;
   if (_wire->requestFrom(_i2caddr, (byte)1) != 1) return 0xFF;
   res= _wire->read();

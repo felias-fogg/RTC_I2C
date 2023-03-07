@@ -18,11 +18,11 @@
 #define TIMEBYTES 7
 #define RTC_CAP_32KHZ 0x01       // can generate 32 kHz signal 
 #define RTC_CAP_1HZ 0x02         // can generate 1 Hz signal
-#define RTC_CAP_ALARM 0x04       // has alarm functionality
-#define RTC_CAP_OFFSET 0x08      // has an offset register
-#define RTC_CAP_TEMP 0x10        // has a temperature sensor
-#define RTC_CAP_SREGADDR 0x20    // uses a strange format for register addresses (upper nibbel)
-#define RTC_CAP_CANRESTART 0x40  // knows how to handle I2C restart without an explicit STOP condition
+#define RTC_CAP_ALARM 0x04       // has alarm functionality to set hour and minute
+#define RTC_CAP_HOURLY_ALARM 0x08// can raise an alarm every hour
+#define RTC_CAP_OFFSET 0x10      // has an offset register
+#define RTC_CAP_TEMP 0x20        // has a temperature sensor
+#define RTC_CAP_SREGADDR 0x40    // uses a strange format for register addresses (upper nibble)
 
 
 /* A generic RTC base class */

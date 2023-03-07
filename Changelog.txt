@@ -70,3 +70,8 @@ V0.4.1 (6.3.2023)
 - added also OFFSET constants for all RTCs that do not have any
 - added some explanations read.md about that and about the new example
   iterate.ino
+
+V0.5.0 (7.3.2023)
+- integrated the strange register addressing  (RTC_CAP_SREGADDR) into
+  the base class, so now it is totally transparent to everybody
+  using the library.

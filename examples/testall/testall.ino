@@ -173,7 +173,6 @@ void loop() {
     Serial.print(F("Register 0x"));
     Serial.print(reg,HEX);
     Serial.print(F("="));
-    if (rtc.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
     Serial.print(rtc.getRegister(reg),BIN);
     Serial.print(F(" (0x"));
     Serial.print(rtc.getRegister(reg),HEX);
@@ -198,12 +197,11 @@ void loop() {
       while (Serial.available()) Serial.read();
       break;
     }
-    if (rtc.getCapabilities() & RTC_CAP_SREGADDR) reg = reg << 4;
     rtc.setRegister(reg,val);
     Serial.println(F("Register set"));
     break;
   default:
-    Serial.println(F("Unknown command '"));
+    Serial.print(F("Unknown command '"));
     Serial.print(c);
     Serial.println(F("'"));
     break;
