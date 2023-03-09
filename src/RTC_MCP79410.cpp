@@ -5,8 +5,33 @@ void MCP79410::init( __attribute__ ((unused)) byte mode) {
 }
 
 bool MCP79410::isValid(void) {
-  return ((getRegister(MCP79410_STATUS) & 0b10000) == 0); // osciallator is running
+  return ((getRegister(MCP79410_STATUS) & 0b100000) != 0); // osciallator is running
 }
+
+void MCP79410::setTime(tmElements_t tm) {
+  int timeout = 0;
+  setRegister(MCP79410_CLOCKREG, 0x00); // disable oscillator
+  while (++timeout && getRegister(MCP79410_CLOCKREG+3) & 0b100000); // wait for OSCON to become zero
+  _wire->beginTransmission(_i2caddr);
+  _wire->write(MCP79410_CLOCKREG);
+  _wire->write(bin2bcd(tm.Second)); 
+  _wire->write(bin2bcd(tm.Minute));
+  _wire->write(bin2bcd(tm.Hour));
+  _wire->write((bin2bcd(tm.Wday-1+_wdaybase)) | 0b1000); // set the VBATEN enbale bit so that the thing can run on batteries
+  _wire->write(bin2bcd(tm.Day));
+  _wire->write(bin2bcd(tm.Month));
+  _wire->write(bin2bcd(tm.Year-30)); // readjust to 2000 instead of 1970!
+  _wire->endTransmission();
+  setRegister(MCP79410_CLOCKREG,bin2bcd(tm.Second)|0x80); // now enable osciallator!
+}
+
+// set time from Unix time
+void MCP79410::setTime(time_t t) {
+  tmElements_t tm;
+  breakTime(t, tm);
+  setTime(tm);
+}
+
 
 void MCP79410::setAlarm(byte minute, byte hour) {
   tmElements_t tm;

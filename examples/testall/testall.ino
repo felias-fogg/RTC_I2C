@@ -1,14 +1,14 @@
 // Simple test for RTC_I2C
 // Just include one RTC class and try out all implemeted methods
 
-#include <RTC_RV3028.h>
+#include <RTC_RV8523.h>
 #include <Wire.h>
 
 #define PIN1HZ 2
 #define PIN32KHZ 3
 #define PINALARM 2
 
-RV3028 rtc;
+RV8523 rtc;
 
 const char *monthName[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",

@@ -1,30 +1,53 @@
-V0.1.0 (25.2.2023)
-- first stub with an idea for the API
+V0.5.2 (8.3.2023)
+- fixed: enable battery switch over (VBATEN) for MCP79410 when setting
+         the time
+- fixed: implemented setting of time for MCP79410 as described in the
+         data sheet, i.e., stop oscillator, set time, start oscillator
 
-V0.1.1 (26.2.2023)
-- renamed from univRTC to I2CRTC
-- framework works with DS1307 example
+V0.5.1 (7.3.2023)
+- added hourly recurring alarm (DS1307 and SD2405 do not support them)
+- added hourly alarms to testall.ino
+- added skipping to 28.2.2100, 23:59:45
 
-V0.2.0 (28.2.2023)
-- added new methods: enableXXHz, disableXXHz, alarm methods, and a getCapabilities method
-- thrown out setAlarm with only minutes since not all RTCs support that, so only hour with minute is
-  supported 
-- added support for DS1337, DS3231, PCF8523
-- added example testall, which can be used as a unit test for the different modules
 
-V0.2.1 (28.2.2023)
-- added support for PCF8563
+V0.5.0 (7.3.2023)
+- integrated the strange register addressing  (RTC_CAP_SREGADDR) into
+  the base class, so now it is totally transparent to everybody
+  using the library.
 
-V0.2.2 (2.3.2023)
-- added support for RS5C372
-- added a new "capability": strange register address: SREGADDR
-  used for RS5C372, who wants to see the register address in
-  the upper nibble
+V0.4.1 (6.3.2023)
+- fixed in testall: register number when 'setting' must also be
+  massaged when RTC_CAP_SREGADDR.
+- added also OFFSET constants for all RTCs that do not have any
+- added some explanations read.md about that and about the new example
+  iterate.ino
 
-V0.2.3 (2.3.2023)
-- checked with new PCF8563 module. This one works flawlessly! The Waveshare one is apparently broken. 
-- added RV-8523 (well, it is simply a synonym for PCF8523)
-- added getTemp method
+V0.4.0 (5.3.2023)
+- added mode=2 for setOffset in order to store the offset value in the
+  native format
+
+V0.3.2 (4.3.2023)
+- added SD2405
+- added possible extra '1' bits in clock register for some RTCs by new
+  var _bit7set
+- moved constructor into header file
+
+V0.3.1 (4.3.2023)
+- added MCP79140
+- fixed masking of unused bits in the clock register
+
+V0.3.0 (4.3.2023)
+- added update of registers from RAM to EEPROM in RV-3032
+- fixed problem with switch-over confusion
+- added 3028
+- added 3028U (using the Unix counter for timekeeping)
+- added timeouts in all loops where we wait for a condition
+- renamed library and classes to make them more readable
+- new example: iterate
+
+V0.2.5 (3.3.2023)
+- added RV-3032
+- added 'mode' parameter to init, which can be used to select the battery switch-over mode
 
 V0.2.4 (3.3.2023)
 - added otional parameter 'blocking' to getTime, which is false by default;
@@ -37,46 +60,32 @@ V0.2.4 (3.3.2023)
 - added section of RTC capabilities in readme
 
 
-V0.2.5 (3.3.2023)
-- added RV-3032
-- added 'mode' parameter to init, which can be used to select the battery switch-over mode
+V0.2.3 (2.3.2023)
+- checked with new PCF8563 module. This one works flawlessly! The Waveshare one is apparently broken.
+- added RV-8523 (well, it is simply a synonym for PCF8523)
+- added getTemp method
 
-V0.3.0 (4.3.2023)
-- added update of registers from RAM to EEPROM in RV-3032
-- fixed problem with switch-over confusion
-- added 3028
-- added 3028U (using the Unix counter for timekeeping)
-- added timeouts in all loops where we wait for a condition
-- renamed library and classes to make them more readable
-- new example: iterate
+V0.2.2 (2.3.2023)
+- added support for RS5C372
+- added a new "capability": strange register address: SREGADDR
+  used for RS5C372, who wants to see the register address in
+  the upper nibble
 
-V0.3.1 (4.3.2023)
-- added MCP79140
-- fixed masking of unused bits in the clock register
+V0.2.1 (28.2.2023)
+- added support for PCF8563
 
-V0.3.2 (4.3.2023)
-- added SD2405
-- added possible extra '1' bits in clock register for some RTCs by new
-  var _bit7set
-- moved constructor into header file
+V0.2.0 (28.2.2023)
+- added new methods: enableXXHz, disableXXHz, alarm methods, and a getCapabilities method
+- thrown out setAlarm with only minutes since not all RTCs support that, so only hour with minute is
+  supported 
+- added support for DS1337, DS3231, PCF8523
+- added example testall, which can be used as a unit test for the different modules
 
-V0.4.0 (5.3.2023)
-- added mode=2 for setOffset in order to store the offset value in the
-  native format
+V0.1.1 (26.2.2023)
+- renamed from univRTC to I2CRTC
+- framework works with DS1307 example
 
-V0.4.1 (6.3.2023)
-- fixed in testall: register number when 'setting' must also be
-  massaged when RTC_CAP_SREGADDR.
-- added also OFFSET constants for all RTCs that do not have any
-- added some explanations read.md about that and about the new example
-  iterate.ino
 
-V0.5.0 (7.3.2023)
-- integrated the strange register addressing  (RTC_CAP_SREGADDR) into
-  the base class, so now it is totally transparent to everybody
-  using the library.
+V0.1.0 (25.2.2023)
+- first stub with an idea for the API
 
-V0.5.1 (7.3.2023)
-- added hourly recurring alarm (DS1307 and SD2405 do not support them)
-- added hourly alarms to testall.ino
-- added skipping to 28.2.2100, 23:59:45
