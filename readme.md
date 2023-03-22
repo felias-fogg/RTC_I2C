@@ -46,7 +46,7 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | `setTime` | `tmElements_t` record | Sets the RTC time from a `tmElements_t` structure. Note that it is Unix epoch based, i.e., the year field is the number of years since 1970. |
 | `getTime`      | optional parameter `bool` blocking (default `false`) | Returns the current time of the RTC as a Unix `time_t` value. If blocking=`true`, then the method waits until the next second has just started. |
 | `getTime` | `&tmElements_t` record, optional parameter `bool` blocking (default `false`) | Sets all fields of the record from the current time of the RTC. For blocking see above. |
-| `enable32kHz`  | none                                            | Enables output of clock pulses. Currently, all RTCs support that.                            |
+| `enable32kHz`  | none                                            | Enables output of clock pulses.                             |
 | `disable32kHz` | none                                            | Disables output of clock pulses.                             |
 | `enable1Hz`    | none                                            | Enables output of 1 Hz signal. |
 | `disable1Hz`   | none                                            | Disables 1 Hz output.                                        |
@@ -56,16 +56,17 @@ This library uses Paul Stoffregen's [*Time*](https://github.com/PaulStoffregen/T
 | `senseAlarm`   | none                                            | Returns `true`if alarm has been raised. |
 | `clearAlarm`   | none                                            | Clears alarm flag. |
 | `setOffset`    | `int` value for 0.01 ppm correction steps and one optional `byte` mode parameter | Note that not all RTCs support trimming and they have different step sizes, ranging from 0.1 ppm to 4.3 ppm. The function will try to approximate the passed value as much as possible. Only DS1307, DS1337, and PCF8563 do not have an offset register. PCF8523 and RV-8523 offer different modes (default mode is 1). With mode 2, one can set the offset register in the RTC's native representation. |
+| `getOffset` | none | returns contents of offset register verbatim (0, if no register) |
 | `getTemp` | none | Returns temperature as an integer value, if the RTC has a user accessible temperature sensor. |
 | `getRegister` | `byte` register address          | Returns contents of RTC register.                            |
 | `setRegister` | `byte` register address, `byte` value | Sets RTC register to value.                                                          |
-| `getCapabilities` | none | Returns a byte with capability bits: Bit 0 = can output 32kHz signal, bit 1 = can output 1 Hz signal, bit 2 = has alarm, bit 3 = has hourly recurring alarm, bit 4 = has offset register, 5 = has temperature sensor, 6 = uses strange register addressing scheme (this is just RS5C372) |
+| `getCapabilities` | none | Returns a byte with capability bits: Bit 0 = can output 32kHz signal, bit 1 = can output 1 Hz signal, bit 2 = has hour/minute alarm, bit 3 = has hourly recurring alarm, bit 4 = has offset register, 5 = has temperature sensor, 6 = uses strange register addressing scheme (this is just RS5C372) |
 
 
 
 ## Caveats
 
-While this library is a great tool when you want to use different RTCs in parallel (there are not too many use cases for this, though, I guess), you should be aware that the RTCs often have similar I2C addresses. In order to avoid I2C address clashes, you need an I2C multiplexer or have to use different I2C buses. The former can be accomplished by a I2C multiplexer such as TCA9548A or PCA9548. The latter could be achieved by using different Wire instances, e.g., on a ESP32. If you want to do that, you need to pass the Wire instance as an parameter in the `begin` method call.
+While this library is a great tool when you want to use different RTCs in parallel (there are not too many <a href="https://github.com/felias-fogg/RTCEval">use cases</a> for this, though, I guess), you should be aware that the RTCs often have similar I2C addresses. In order to avoid I2C address clashes, you need an I2C multiplexer or have to use different I2C buses. The former can be accomplished by a I2C multiplexer such as TCA9548A or PCA9548. The latter could be achieved by using different Wire instances, e.g., on a ESP32. If you want to do that, you need to pass the Wire instance as an parameter in the `begin` method call.
 
 If you want to run just one RTC, the above is, of course, irrelevant. And if the functionality of the API is enough for you, you just found the right tool. As mentioned above, you can, of course, add all the features of your favorite RTC by adding more methods.
 
@@ -103,7 +104,7 @@ The following table lists all the capabilities for each RTC. For the frequency o
 
 <a name="f1"></a><sup>1)</sup> The offset register influences the frequency directly.
 
-<a name="f2"></a><sup>2)</sup> The offset register influences the frequency. However, the adjustments are made every 10, 20, or 60 seconds. This means one would need a large set of measurements when one wants to to get the true average frequency.
+<a name="f2"></a><sup>2)</sup> The offset register influences the frequency. However, the adjustments are made every 10, 20, or 60 seconds. This means one would need a large set of measurements when one wants to determine the true average frequency.
 
 <a name="f3"></a><sup>3)</sup> The output cannot be disabled using software, but one has to pull-down the `CLKOE` pin. On the Sparkfun breakout board, this input is pulled to GND by a 100 kΩ resistor, i.e., one has to tie it to Vcc in order to enable CLKOUT. 
 

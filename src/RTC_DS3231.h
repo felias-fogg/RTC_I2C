@@ -37,5 +37,6 @@ class DS3231: public DSAlarm {
   void disable1Hz(void);
   int getTemp(void);
   void setOffset(int offset, byte mode=1);
+  unsigned int getOffset(void);
 };
 #endif

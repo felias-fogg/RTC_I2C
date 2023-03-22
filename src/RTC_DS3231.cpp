@@ -51,3 +51,7 @@ void DS3231::setOffset(int offset, byte mode) {
   while (timeout++ && getRegister(DS3231_STATUS) & 0b100); // wait fcor non-busy period
   setRegister(DS3231_CONTROL,getRegister(DS3231_CONTROL)|0b100000);
 }
+
+unsigned int DS3231::getOffset(void) {
+  return getRegister(DS3231_OFFSET);
+}

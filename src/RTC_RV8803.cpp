@@ -104,3 +104,6 @@ void RV8803::setOffset(int offset, byte mode) {
 }
 
   
+unsigned int RV8803::getOffset(void) {
+  return (getRegister(RV8803_OFFSET) & 0x3F);
+}

@@ -65,3 +65,7 @@ void PCF8523::setOffset(int offset, byte mode) {
     setRegister(PCF8523_OFFSET, ((offset&0x7F)|(mode<<7)));
   }
 }
+
+unsigned int PCF8523::getOffset(void) {
+  return getRegister(PCF8523_OFFSET);
+}

@@ -95,6 +95,11 @@ void RV3032::setOffset(int offset, byte mode) {
   updateEEPROMByte(RV3032_OFFSET);
 }
 
+unsigned int RV3032::getOffset(void) {
+  return (getRegister(RV3032_OFFSET)&0x3F);
+}
+
+
   
 void RV3032::updateEEPROMByte(byte reg) {
   byte cnts = getRegister(reg);

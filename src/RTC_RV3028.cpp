@@ -89,6 +89,11 @@ void RV3028::setOffset(int offset, byte mode) {
   updateEEPROMByte(RV3028_OFFSET+1);
 }
 
+unsigned int RV3028::getOffset(void) {
+  return ((((unsigned int)getRegister(RV3028_OFFSET))<<1) | (getRegister(RV3028_OFFSET+1)>>7));
+}
+
+
   
 void RV3028::updateEEPROMByte(byte reg) {
   byte timeout = 0;

@@ -77,4 +77,6 @@ void SD2405::setOffset(int offset, byte mode) {
   setRegister(SD2405_OFFSET, (offset&0x7F));
 }
 
-  
+unsigned int SD2405::getOffset(void) {
+  return (getRegister(SD2405_OFFSET) & 0x7F);
+}

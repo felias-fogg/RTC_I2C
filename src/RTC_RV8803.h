@@ -50,5 +50,6 @@ class RV8803: public RTC {
   void enable32kHz(void);
   void enable1Hz(void);
   void setOffset(int offset, byte mode=1);
+  unsigned int getOffset(void);
 };
 #endif

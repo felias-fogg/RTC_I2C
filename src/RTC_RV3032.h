@@ -49,6 +49,8 @@ class RV3032: public RTC {
   void enable1Hz(void);
   void disable1Hz(void);
   void setOffset(int offset, byte mode=1);
+  unsigned int getOffset(void);
+
 
  protected:
   void updateEEPROMByte(byte reg);

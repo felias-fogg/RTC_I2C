@@ -66,3 +66,7 @@ void RS5C372::setOffset(int offset, byte mode) {
   //Serial.println(((offset&0x7F)|(mode<<7)));
   setRegister(RS5C372_OFFSET, (offset&0x7F));
 }
+
+unsigned int RS5C372::getOffset(void) {
+  return getRegister(RS5C372_OFFSET);
+}

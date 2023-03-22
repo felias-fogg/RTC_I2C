@@ -46,6 +46,7 @@ class RTC {
   virtual bool senseAlarm(void) { return false; };
   virtual void clearAlarm(void) { };
   virtual void setOffset(__attribute__ ((unused)) int offset, __attribute__ ((unused)) byte mode = 1) {  };
+  virtual unsigned int getOffset(void) { return 0; };
   virtual int  getTemp(void) { return -128; };
   virtual void setRegister(byte reg, byte val);
   virtual byte getRegister(byte reg);

@@ -116,4 +116,6 @@ void MCP79410::setOffset(int offset, byte mode) {
   setRegister(MCP79410_CONTROL, getRegister(MCP79410_CONTROL) & 0b11111011); // clear RS2
 }
 
-  
+unsigned int MCP79410::getOffset(void) {
+  return getRegister(MCP79410_OFFSET);
+}

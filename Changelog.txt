@@ -1,3 +1,7 @@
+V0.6.0 (22.3.2023)
+- added: new method getOffset(void): returns contents of offset
+  register verbatim (i.e., no interpretation as a ppm value)
+
 V0.5.2 (8.3.2023)
 - fixed: enable battery switch over (VBATEN) for MCP79410 when setting
          the time
