@@ -1,0 +1,76 @@
+---
+Language: Cpp
+
+BasedOnStyle: LLVM
+
+# Indentation
+IndentWidth: 2
+ContinuationIndentWidth: 2
+TabWidth: 2
+UseTab: Never
+AccessModifierOffset: -1
+
+# Braces
+BreakBeforeBraces: Attach
+
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# Pointers and references
+DerivePointerAlignment: true
+
+# Line length / wrapping
+ColumnLimit: 120
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: false
+
+# Short constructs
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Empty
+
+# Spaces
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpacesInParens: Never
+SpacesInSquareBrackets: false
+SpaceBeforeCpp11BracedList: false
+
+# C++ braced initializers
+Cpp11BracedListStyle: true
+
+# Includes
+SortIncludes: Never
+
+# Preprocessor
+IndentPPDirectives: None
+
+# Comments
+ReflowComments: true
+FixNamespaceComments: false
+
+# Namespaces
+NamespaceIndentation: None
+
+# Empty lines
+MaxEmptyLinesToKeep: 2
+
+# Return types
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+PenaltyReturnTypeOnItsOwnLine: 1000

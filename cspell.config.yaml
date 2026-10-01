@@ -1,0 +1,41 @@
+dictionaries: []
+dictionaryDefinitions: []
+ignorePaths:
+  - compile_commands.json
+  - keywords.txt
+  - platformio.ini
+  - .coderabbit.yaml
+  - .gitignore
+  - .gitattributes
+ignoreWords: []
+import: []
+version: '0.2'
+words:
+  - Adafruit
+  - ALARMHR
+  - ALARMWDAYS
+  - CLKOE
+  - CLKOUT
+  - CodeRabbit
+  - decodewday
+  - doxyfile
+  - DSALARM
+  - EEPROM
+  - EnviroDIY
+  - INTB
+  - INTCN
+  - INTRB
+  - MAXRTC
+  - MBED
+  - mcss
+  - Nebel
+  - PCFALARM
+  - PINALARM
+  - RTClib
+  - Sparkfun
+  - SREGADDR
+  - Stoffregen
+  - testall
+  - VBATEN
+  - wdaybase
+  - wdayfirst

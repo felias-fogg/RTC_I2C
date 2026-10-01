@@ -1,0 +1,72 @@
+# Compiled files, executables
+*.o
+*.a
+*.exe
+*.out
+*.app
+
+# Junk
+*.orig
+*.log
+*.bak
+
+# IDE project files
+.settings
+.pioenvs
+.piolibdeps
+.pio/*
+.clang_complete
+.gcc-flags.json
+platformio.ini
+extra_envs.ini
+lib/readme.txt
+include/readme.txt
+.history
+
+# VSCode
+.vscode
+
+# Filters
+.gitconfig
+filters/*
+
+# Certificates
+*.cert
+*.crt
+*.pem
+*.key
+
+# PlatformIO
+pioScripts/*
+variants/*
+boards/*
+tests/*
+lib/*
+platformio_extra_envs.ini
+pio_common_libdeps.ini
+
+# Arduino CLI
+continuous_integration/arduino_cli_local.yaml
+
+# Local CI and Build Artifacts
+home/arduino/*
+continuous_integration_artifacts/*
+clang_format_all.bat
+generateKeywords.bat
+installWorkingDependencies.bat
+clang-format-all.py
+runDoxygen.bat
+compile_commands.json
+buildCI.bat
+
+# Other stuff
+*.tar.gz
+archive/*
+src/wakeUp.h
+**/__pycache__/**
+AGENTS.md
+.github/copilot-instructions.md
+.bumpversion.toml
+.github/workflows/LibraryBuild.yml
+datasheets/*
+Datasheets.md

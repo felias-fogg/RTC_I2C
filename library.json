@@ -1,29 +1,25 @@
 {
-    "version": "0.6.0",
-    "name": "RTC_I2C",
-    "keywords": "I2C, RTC, time",
-    "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803, RV-3032, RV-3028, MCP79140, SD2405",
-    "authors": "Bernhard Nebel",
-    "license": "MIT",
-    "dependencies":
+  "version": "0.7.0",
+  "name": "RTC_I2C",
+  "keywords": "I2C, RTC, time",
+  "description": "A universal API for a large number of I2C RTCs. Note that not the complete functionality of each RTC is supported. Currently supported RTCs: DS1307, DS1337, DS3231, PCF8523, PCF8563, RS5C372, RV-8523, RV-8803, RV-3032, RV-3028, MCP79140, SD2405",
+  "authors": { "name": "Bernhard Nebel" },
+  "license": "MIT",
+  "dependencies": [
     {
-	{
-	"name": "Time",
-	"version": "^1.6.1"
-	},
-	{
-	    "name": "Wire"
-	}
+      "name": "EpochTime",
+      "owner": "envirodiy",
+      "url": "https://github.com/EnviroDIY/EpochTime",
+      "version": "~1.1.0",
+      "note": "An Arduino library with time utilities for handling epoch and broken-down time.",
+      "authors": ["Sara Damiano"],
+      "frameworks": "arduino"
     }
-    "repository":
-    {
-	"type": "git",
-	"url": "https://github.com/felias-fogg/RTC_I2C"
-    },
-    "frameworks": "arduino",
-    "platforms":
-    [
-	"atmelavr"
-    ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnviroDIY/RTC_I2C"
+  },
+  "frameworks": "arduino",
+  "platforms": "*"
 }
-

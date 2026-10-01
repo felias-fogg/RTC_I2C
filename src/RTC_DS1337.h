@@ -6,33 +6,48 @@
 #include <RTC_I2C.h>
 
 
-#define DS1337_ADDRESS 0x68 // I2C address for DS1337
-#define DS1337_CLOCKREG 0x00 // Clock register
-#define DS1337_ALARM1 0x07 // start of alarm 1 register (seconds)
-#define DS1337_CONTROL 0x0E // Control register
-#define DS1337_STATUS  0x0F // Status register
-#define DS1337_OFFSET 0xFF       // no offset register
-#define DS1337_WDAYBASE 1    // wday range from 1 to 7
-#define DS1337_WDAYFIRST true //  wday comes before day of month in clock reg
-#define DS1337_BIT7   0
-#define DS1337_CAP    (RTC_CAP_32KHZ|RTC_CAP_1HZ|RTC_CAP_ALARM|RTC_CAP_HOURLY_ALARM)
+/// 7-bit I2C slave address for the DS1337.
+#define DS1337_ADDRESS 0x68
+/// Start of the time-of-day/date registers; the first clock register is at address 0x00.
+#define DS1337_CLOCKREG 0x00
+/// Start of Alarm 1 registers; referred to as the Alarm 1 time-of-day/date alarm registers in documentation (ADDRESSES
+/// 0x07–0x0A).
+#define DS1337_ALARM1 0x07
+/// Control register; referred to as Control Register in documentation (ADDRESS 0x0E).
+#define DS1337_CONTROL 0x0E
+/// Status register; referred to as Status Register in documentation (ADDRESS 0x0F).
+#define DS1337_STATUS 0x0F
+/// No offset/calibration register is provided by the DS1337.
+#define DS1337_OFFSET 0xFF
+/// Weekday numbering used by the RTC: 1 through 7.
+#define DS1337_WDAYBASE 1
+/// The weekday register comes before the day-of-month register in the clock register sequence.
+#define DS1337_WDAYFIRST true
+/// No clock-register bit 7 must be forced when writing time.
+#define DS1337_BIT7 0
+/// Capabilities supported by the DS1337 implementation.
+#define DS1337_CAP (RTC_CAP_32KHZ | RTC_CAP_1HZ | RTC_CAP_ALARM | RTC_CAP_HOURLY_ALARM)
 
-
-class DS1337: public DSAlarm {
+/// The class for the [Analog Devices
+/// DS1337](https://www.analog.com/media/en/technical-documentation/data-sheets/ds1337-ds1337c.pdf)
+class DS1337 : public DSAlarm {
  public:
-  DS1337(void)  {
-  _i2caddr = DS1337_ADDRESS;
-  _clockreg = DS1337_CLOCKREG;
-  _wdaybase = DS1337_WDAYBASE;
-  _wdayfirst = DS1337_WDAYFIRST;
-  _capabilities = DS1337_CAP;
-  _bit7set = DS1337_BIT7;
-  };
-  void init(byte mode=1);
-  bool isValid(void);
-  void enable32kHz(void);
-  void disable32kHz(void);
-  void enable1Hz(void);
-  void disable1Hz(void);
+  /// Initializes the instance for the DS1337 hardware.
+  DS1337() {
+    _i2caddr = DS1337_ADDRESS;
+    _clockreg = DS1337_CLOCKREG;
+    _wdaybase = DS1337_WDAYBASE;
+    _wdayfirst = DS1337_WDAYFIRST;
+    _capabilities = DS1337_CAP;
+    _bit7set = DS1337_BIT7;
+  }
+  bool init(BatteryMode mode = BatteryMode::LEVEL_SWITCHING) override;
+  bool isValid() override;
+  bool enable32kHz() override;
+  bool disable32kHz() override;
+  bool enable1Hz() override;
+  bool disable1Hz() override;
+  String getManufacturer() override;
+  String getModel() override;
 };
 #endif

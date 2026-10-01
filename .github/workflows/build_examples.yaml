@@ -1,0 +1,83 @@
+name: Build Examples
+
+# Triggers the workflow on push or pull request events
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_examples:
+    name: Build Examples
+    if: ${{ ! contains(github.event.head_commit.message, 'ci skip') }}
+    uses: EnviroDIY/workflows/.github/workflows/build_examples.yaml@main
+    with:
+      # # Workspace path as an absolute path (default: workspace root)
+      # workspace_path: ""
+
+      # # Continuous integration path, relative to the workspace path (default: continuous_integration)
+      # ci_path: "continuous_integration"
+
+      # # Path to store artifacts, relative to the workspace path (default: continuous_integration_artifacts)
+      # artifact_path: "continuous_integration_artifacts"
+
+      # # Path to examples, relative to the workspace path (default: examples)
+      # examples_path: "examples"
+
+      # # Path to extras, relative to the workspace path (default: extras)
+      # extras_path: "extras"
+
+      # # Filename for the configuration file (default: matrix_config.json)
+      # config_file_name: "matrix_config.json"
+
+      # # Comma-separated list of compilers to use: arduino-cli, platformio, or both (default: arduino-cli,platformio)
+      # compiler_list: "arduino-cli,platformio"
+
+      # # Comma-separated list of examples to build or "all" for all (default: all)
+      # examples_to_build: "examples/example1,examples/example2"
+
+      # # Comma-separated list of examples to ignore (mutually exclusive with examples_to_build)
+      # examples_to_ignore: "examples/example_to_skip"
+
+      # # Comma-separated list of boards to build with all compilers "all" for all (default: all)
+      # # Mutually exclusive with boards_to_ignore
+      # boards_to_build: "mayfly,megaatmega2560,zeroUSB,adafruit_feather_m0"
+      # # Comma-separated list of boards to skip with any compiler (default: empty)
+      # # Mutually exclusive with boards_to_build
+      # boards_to_ignore: ""
+
+      # # Comma-separated list of Arduino FQBNs or board names to build with Arduino CLI or "all" for all (default: all)
+      # # Mutually exclusive with arduino_fqbns_to_ignore
+      # arduino_fqbns_to_build: "mayfly,megaatmega2560,zeroUSB,adafruit_feather_m0"
+      # # Comma-separated list of Arduino FQBNs or board names to skip (default: empty)
+      # # Mutually exclusive with arduino_fqbns_to_build
+      arduino_fqbns_to_ignore: "arduino:zephyr_main:nicla_sense"
+
+      # # Comma-separated list of PlatformIO environments or board names to build or "all" for all (default: all)
+      # # Mutually exclusive with pio_envs_to_ignore
+      # pio_envs_to_build: "mayfly,megaatmega2560,zeroUSB,adafruit_feather_m0"
+      # # Comma-separated list of PlatformIO environments or board names to skip (default: esp32-c6-devkitm-1,arduino_nano_esp32)
+      # # Mutually exclusive with pio_envs_to_build
+      pio_envs_to_ignore: "esp32-c6-devkitm-1,arduino_nano_esp32"
+
+      # # Semicolon-separated list of comma-separated inline defines to expand the matrix
+      # # To set a value, use the format: NAME=VALUE.
+      # # These will be written to the top of the example code as #define statements.
+      # # These will NOT be passed to the compiler!
+      # inline_defines: "DEBUG,VERSION=1.0;VERSION=2.0"
+
+      # # Semicolon-separated list of comma-separated compiler flags to expand the matrix
+      # # For the Arduino CLI, these will be passed to the compiler
+      # # For PlatformIO, these will be ignored and must be set in the platformio.ini file for each environment.
+      # compiler_flags: "-Wall,-Wextra;-O2,-g"
+
+      # # Comma-separated list of fields to group logs by (default: compiler,board,example,inline_defines)
+      # log_grouping_fields: "compiler,board,example,inline_defines"
+
+      # # Comma-separated list of fields to group jobs by (default: compiler,board)
+      # job_grouping_fields: "compiler,board"
+    secrets: inherit

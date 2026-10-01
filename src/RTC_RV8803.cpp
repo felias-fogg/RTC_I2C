@@ -1,109 +1,166 @@
 #include <RTC_RV8803.h>
 
-void RV8803::init(__attribute__ ((unused)) byte mode) {
-  setRegister(RV8803_CONTROL, 0); // clear control register
-  setRegister(RV8803_STATUS, 0);  // clear all flags
-  setRegister(RV8803_CLKOUT, 0);  // 32 KHz output by default
+bool RV8803::init(__attribute__((unused)) BatteryMode mode) {
+  bool success = true;
+  success &= setRegister(RV8803_CONTROL, 0); // clear control register
+  success &= setRegister(RV8803_STATUS, 0);  // clear all flags
+  success &= setRegister(RV8803_CLKOUT, 0);  // 32 KHz output by default
+  return success;
 }
 
-bool RV8803::isValid(void) {
-  return ((getRegister(RV8803_STATUS) & 0b11) == 0); // both voltage low flags are cleared
+bool RV8803::isValid() {
+  byte status;
+  return readRegister(RV8803_STATUS, status) && ((status & 0b11) == 0); // both voltage low flags are cleared
 }
 
 // set & clear reset bit when setting time/date
-void RV8803::setTime(time_t t) {
-  setRegister(RV8803_CONTROL, getRegister(RV8803_CONTROL) | 1); // set RESET bit
-  RTC::setTime(t);
-  setRegister(RV8803_CONTROL, getRegister(RV8803_CONTROL) & 0b11111110); // clear RESET bit  
+bool RV8803::setTime(timestamp_t t) {
+  tm timeParts;
+  TimeUtils::fillTimeParts(t, 0, epochStart::unix_epoch, timeParts);
+  return setTime(timeParts);
 }
 
-void RV8803::setTime(tmElements_t tm) {
-  setRegister(RV8803_CONTROL, getRegister(RV8803_CONTROL) | 1); // set RESET bit
-  RTC::setTime(tm);
-  setRegister(RV8803_CONTROL, getRegister(RV8803_CONTROL) & 0b11111110); // clear RESET bit  
+bool RV8803::setTime(tm timeParts) {
+  byte control;
+  if (!readRegister(RV8803_CONTROL, control)) return false;
+  bool success = setRegister(RV8803_CONTROL, control | 1); // set RESET bit
+  if (success) success = writeTimeRegisters(timeParts);
+  success &= setRegister(RV8803_CONTROL, control & 0b11111110); // clear RESET bit
+  return success;
 }
 
-time_t RV8803::getTime(bool blocking) {
- tmElements_t tm;
- getTime(tm, blocking);
- return makeTime(tm);
-}
-
-// implementing the time reading as described in the
-// applcation notes, section 4.12
-void RV8803::getTime(tmElements_t &tm, bool blocking) {
-  tmElements_t tm1;
-  RTC::getTime(tm, blocking);
-  if (blocking) return;   // if we used a blocking call to getTime, then we always wait til the next second starts
-  if (tm.Second == 59) {  // be careful when we read 59 seconds because there could have been an increment
-    RTC::getTime(tm1, blocking);  // query again
-    if (tm1.Second == 59) return; // if again 59, the first reading was OK
-    tm = tm1; // otherwise the second reading must be OK
+bool RV8803::writeTimeRegisters(tm timeParts) {
+  for (byte attempts = 0; attempts < 4; ++attempts) {
+    _wire->beginTransmission(_i2caddr);
+    _wire->write(RV8803_CLOCKREG);
+    _wire->write(bin2bcd(timeParts.tm_sec));
+    _wire->write(bin2bcd(timeParts.tm_min));
+    _wire->write(bin2bcd(timeParts.tm_hour));
+    _wire->write(1 << timeParts.tm_wday);
+    _wire->write(bin2bcd(timeParts.tm_mday));
+    _wire->write(bin2bcd(timeParts.tm_mon + 1));
+    _wire->write(bin2bcd(timeParts.tm_year - 100));
+    if (_wire->endTransmission() == 0 && finishWriteAccess(RV8803_CLOCKREG)) return true;
   }
-}
-  
-void RV8803::setAlarm(byte minute, byte hour) {
-  setRegister(RV8803_ALARM, bin2bcd(minute)); // set minute alarm
-  setRegister(RV8803_ALARM+1, bin2bcd(hour)); // set hour alarm
-  setRegister(RV8803_ALARM+2, 0x80); // set weekday alarm to always
-  setRegister(RV8803_ALARM+3, 0x80); // set day alarm to always
+  return false;
 }
 
-void RV8803::setAlarm(byte minute) {
-  setRegister(RV8803_ALARM, bin2bcd(minute)); // set minute alarm
-  setRegister(RV8803_ALARM+1, 0x80); // set hour alarm to always
-  setRegister(RV8803_ALARM+2, 0x80); // set weekday alarm to always
-  setRegister(RV8803_ALARM+3, 0x80); // set day alarm to always
-}
-
-
-void RV8803::enableAlarm(void) { 
-  byte ctr = getRegister(RV8803_CONTROL);
-  setRegister(RV8803_CONTROL, ctr | 0b1000); // set the AIE bit
-}
-
-void RV8803::disableAlarm(void) {
-  byte ctr = getRegister(RV8803_CONTROL);
-  setRegister(RV8803_CONTROL, (ctr & 0b11110111));  // clear AIE bit
-}
-
-bool RV8803::senseAlarm(void) {
-  return ((getRegister(RV8803_STATUS) & 0b1000) != 0);
-}
-
-void RV8803::clearAlarm(void) {
-  byte ctr = getRegister(RV8803_STATUS);
-  setRegister(RV8803_STATUS, (ctr & 0b11110111)); 
-}
-
-
-void RV8803::enable32kHz(void) {
-  byte clkout = getRegister(RV8803_CLKOUT);
-  setRegister(RV8803_CLKOUT, (clkout | 0b1100));
-}
-
-void RV8803::enable1Hz(void) {
-  byte clkout = getRegister(RV8803_CLKOUT);
-  setRegister(RV8803_CLKOUT, (clkout & 0b11110011) | 0b00001000); 
-}
-
-// negative values make the clock faster by 0.2384 ppm/LSB
-// The range of the internal parameter goes from -32 to +31.
-// This means that possible values for offset range from -768 to +744 corresponding to -7.68 ppm to 7.44 ppm 
-void RV8803::setOffset(int offset, byte mode) {
-  if (mode != 2) {
-    if (offset < 0) offset = offset - 12;
-    else offset = offset + 12;
-    offset = offset/24;
-    if (offset < -32) offset = -32;
-    else if (offset > 31) offset = 31;
+bool RV8803::setRegister(byte reg, byte val) {
+  for (byte attempts = 0; attempts < 4; ++attempts) {
+    _wire->beginTransmission(_i2caddr);
+    _wire->write(reg);
+    _wire->write(val);
+    if (_wire->endTransmission() == 0 && finishWriteAccess(reg)) return true;
   }
-  //Serial.println(offset);
-  //Serial.println(offset&0x3F);
-  setRegister(RV8803_OFFSET, (offset&0x3F));
+  return false;
 }
 
-  
-unsigned int RV8803::getOffset(void) {
+bool RV8803::finishWriteAccess(byte reg) {
+  byte value;
+  return readRegister(reg, value); // finish with a read operation and STOP, as required by affected silicon
+}
+
+timestamp_t RV8803::getTime() {
+  tm timeParts;
+  getTime(timeParts);
+  return TimeUtils::tmToEpochTime(timeParts).getTimestamp();
+}
+
+// Implement the time-reading procedure described in the application note, section 4.12.
+bool RV8803::getTime(tm &timeParts) {
+  tm timeParts1;
+  if (!RTC_I2C::getTime(timeParts)) return false;
+  if (timeParts.tm_sec == 59) { // be careful when we read 59 seconds because there could have been an increment
+    if (!RTC_I2C::getTime(timeParts1)) return false;     // query again
+    if (timeParts1.tm_sec != 59) timeParts = timeParts1; // otherwise the second reading must be OK
+  }
+  return true;
+}
+
+bool RV8803::setAlarm(byte minute, byte hour) {
+  bool success = true;
+  success &= setRegister(RV8803_ALARM, bin2bcd(minute));   // set minute alarm
+  success &= setRegister(RV8803_ALARM + 1, bin2bcd(hour)); // set hour alarm
+  success &= setRegister(RV8803_ALARM + 2, 0x80);          // set weekday alarm to always
+  success &= setRegister(RV8803_ALARM + 3, 0x80);          // set day alarm to always
+  return success;
+}
+
+bool RV8803::setAlarm(byte minute) {
+  bool success = true;
+  success &= setRegister(RV8803_ALARM, bin2bcd(minute)); // set minute alarm
+  success &= setRegister(RV8803_ALARM + 1, 0x80);        // set hour alarm to always
+  success &= setRegister(RV8803_ALARM + 2, 0x80);        // set weekday alarm to always
+  success &= setRegister(RV8803_ALARM + 3, 0x80);        // set day alarm to always
+  return success;
+}
+
+
+bool RV8803::enableAlarm() {
+  byte ctr;
+  if (!readRegister(RV8803_CONTROL, ctr)) return false;
+  return setRegister(RV8803_CONTROL, ctr | 0b1000); // set the AIE bit
+}
+
+bool RV8803::disableAlarm() {
+  byte ctr;
+  if (!readRegister(RV8803_CONTROL, ctr)) return false;
+  return setRegister(RV8803_CONTROL, (ctr & 0b11110111)); // clear AIE bit
+}
+
+bool RV8803::senseAlarm() {
+  byte status;
+  return readRegister(RV8803_STATUS, status) && ((status & 0b1000) != 0);
+}
+
+bool RV8803::clearAlarm() {
+  byte ctr;
+  if (!readRegister(RV8803_STATUS, ctr)) return false;
+  return setRegister(RV8803_STATUS, (ctr & 0b11110111));
+}
+
+
+bool RV8803::enable32kHz() {
+  byte clkout;
+  if (!readRegister(RV8803_CLKOUT, clkout)) return false;
+  return setRegister(RV8803_CLKOUT, (clkout | 0b1100));
+}
+
+bool RV8803::enable1Hz() {
+  byte clkout;
+  if (!readRegister(RV8803_CLKOUT, clkout)) return false;
+  return setRegister(RV8803_CLKOUT, (clkout & 0b11110011) | 0b00001000);
+}
+
+bool RV8803::setOffset(int offset, OffsetMode mode) {
+  bool success = true;
+  if (mode != OffsetMode::RAW_OFFSET) {
+    // Force the offset into range
+    if (offset < 0)
+      offset = offset - 12;
+    else
+      offset = offset + 12;
+    offset = offset / 24;
+    if (offset < -32)
+      offset = -32;
+    else if (offset > 31)
+      offset = 31;
+  }
+  // set the offset register
+  success &= setRegister(RV8803_OFFSET, (offset & 0x3F)); // Serial.println(offset);
+  // Serial.println(offset&0x3F);
+  return success;
+}
+
+
+unsigned int RV8803::getOffset() {
   return (getRegister(RV8803_OFFSET) & 0x3F);
+}
+
+String RV8803::getManufacturer() {
+  return F("Micro Crystal");
+}
+
+String RV8803::getModel() {
+  return F("RV8803");
 }
